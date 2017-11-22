@@ -1,7 +1,15 @@
 import * as React from "react";
+import * as firebase from "firebase";
+
 import { Link } from "react-router-dom";
 
-class Home extends React.Component {
+interface HomeProps {
+  ref: firebase.database.Reference;
+}
+
+interface State { }
+
+class Home extends React.Component<HomeProps, State> {
   render() {
     return (
       <div className="App">
