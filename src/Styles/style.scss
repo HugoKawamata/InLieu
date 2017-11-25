@@ -1,0 +1,40 @@
+$usual-top-pad: 0.3rem;
+$usual-bottom-pad: 0.7rem;
+
+$body-bg: #ddd;
+$inactive-tab-bg: $body-bg;
+$inactive-tab-icon: #555;
+
+.input, .ui.buttons {
+  margin-top: $usual-top-pad;
+  margin-bottom: $usual-bottom-pad;
+}
+
+body {
+  background-color: $body-bg;
+}
+
+.loginPage {
+  padding: 2em !important;
+  margin-bottom: 20vh !important;
+}
+
+.fullheight-flexbox {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ui.tabular.menu {
+  border-bottom: 0px;
+}
+
+.menu > a > :not(.active) {
+  background-color: $inactive-tab-bg !important;
+  color: $inactive-tab-icon !important;
+}
+
+.active {
+  background-color: red;
+}

@@ -1,0 +1,28 @@
+.input, .ui.buttons {
+  margin-top: 0.3rem;
+  margin-bottom: 0.7rem; }
+
+body {
+  background-color: #ddd; }
+
+.loginPage {
+  padding: 2em !important;
+  margin-bottom: 20vh !important; }
+
+.fullheight-flexbox {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+
+.ui.tabular.menu {
+  border-bottom: 0px; }
+
+.menu > a > :not(.active) {
+  background-color: #ddd !important;
+  color: #555 !important; }
+
+.active {
+  background-color: red; }
+
+/*# sourceMappingURL=style.css.map */

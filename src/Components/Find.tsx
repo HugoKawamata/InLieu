@@ -12,7 +12,7 @@ interface State {
 export default class Find extends React.Component<Props, State> {
   render() {
     return (
-      <Segment>
+      <Segment attached="bottom">
         <div className="map">
         </div>
       </Segment>

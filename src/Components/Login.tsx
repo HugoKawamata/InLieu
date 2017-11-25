@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as firebase from "firebase";
 import { Redirect } from "react-router";
-import { Segment, Input, Button } from "semantic-ui-react";
+import { Segment, Input, Button, Header } from "semantic-ui-react";
 
 interface Props { }
 interface State {
   formEmail: string;
   formPassword: string;
+  signInLoading: boolean;
+  registerLoading: boolean;
   validLogin: boolean;
 }
 
@@ -16,11 +18,14 @@ export default class Login extends React.Component<Props, State> {
     this.state = {
       formEmail: "",
       formPassword: "",
+      signInLoading: false,
+      registerLoading: false,
       validLogin: false,
     };
   }
 
   register = (email: string, password: string) => {
+    this.setState({registerLoading: true})
     firebase.auth().createUserWithEmailAndPassword(email, password).then(
       () => {
         this.setState({validLogin: true});
@@ -30,9 +35,11 @@ export default class Login extends React.Component<Props, State> {
         alert(error);
       }
     );
+    this.setState({registerLoading: false});
   }
 
   signIn = (email: string, password: string) => {
+    this.setState({signInLoading: true})
     firebase.auth().signInWithEmailAndPassword(email, password).then(
       () => {
         this.setState({validLogin: true});
@@ -42,6 +49,7 @@ export default class Login extends React.Component<Props, State> {
         // Handle error
       }
     );
+    this.setState({signInLoading: false});
   }
 
   propertyHandler = (field: string) => (e: React.FormEvent<HTMLInputElement>) => {
@@ -57,34 +65,45 @@ export default class Login extends React.Component<Props, State> {
       );
     } else {
       return (
-        <Segment className="loginPage" raised={true}>
-          <div>
-            <Input
-              value={this.state.formEmail}
-              label="Email"
-              onChange={this.propertyHandler("formEmail")}
-            />
-          </div>
-          <div>
-            <Input
-              value={this.state.formPassword}
-              label="Password"
-              onChange={this.propertyHandler("formPassword")}
-            />
-          </div>
-          <div>
-            <Button
-              onClick={() => this.register(this.state.formEmail, this.state.formPassword)}
-            >
-              Register
-            </Button>
-            <Button
-              onClick={() => this.signIn(this.state.formEmail, this.state.formPassword)}
-            >
-              Sign In
-            </Button>
-          </div>
-        </Segment>
+        <div className="fullheight-flexbox">
+          <Segment className="loginPage" raised={true} textAlign="center" color="yellow">
+            <Header as="h2" textAlign="center">
+              Login
+            </Header>
+            <div>
+              <Input
+                value={this.state.formEmail}
+                label="Email"
+                onChange={this.propertyHandler("formEmail")}
+              />
+            </div>
+            <div>
+              <Input
+                value={this.state.formPassword}
+                label="Password"
+                onChange={this.propertyHandler("formPassword")}
+              />
+            </div>
+            <div>
+              <Button.Group>
+                <Button
+                  color="yellow"
+                  loading={this.state.registerLoading}
+                  onClick={() => this.register(this.state.formEmail, this.state.formPassword)}
+                >
+                  Register
+                </Button>
+                <Button.Or/>
+                <Button
+                  loading={this.state.signInLoading}
+                  onClick={() => this.signIn(this.state.formEmail, this.state.formPassword)}
+                >
+                  Sign In
+                </Button>
+              </Button.Group>
+            </div>
+          </Segment>
+        </div>
       );
     }
   }

@@ -27,10 +27,10 @@ class App extends React.Component {
   render() {
     return (
       <div id="main">
+        <Route path="/app" component={MobNavBar} />
         <Route exact={true} path="/" component={FBHome} />
         <Route exact={true} path="/login" component={Login} />
         <Route exact={true} path="/app/find" component={Find} />
-        <Route path="/app" component={MobNavBar} />
       </div>
     );
   }
