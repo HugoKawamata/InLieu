@@ -1,10 +1,11 @@
 import * as React from "react";
 import * as firebase from "firebase";
+import { Button } from "semantic-ui-react";
 
 import { Link } from "react-router-dom";
 
 interface HomeProps {
-  ref: firebase.database.Reference;
+  fref: any;
 }
 
 interface State { }
@@ -18,7 +19,7 @@ class Home extends React.Component<HomeProps, State> {
         </div>
         <p className="App-intro">
           <Link to="/login">
-            <button className="button">Login</button>
+            <Button className="button">Login</Button>
           </Link>
         </p>
       </div>

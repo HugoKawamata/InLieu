@@ -4,18 +4,33 @@ import "./App.css";
 
 import firebase from "./firebase";
 import Home from "./Components/Home";
+import Login from "./Components/Login";
+import Find from "./Components/Find";
+import MobNavBar from "./Components/MobNavBar";
 
 let database = firebase.database().ref();
 
-let FBHome = () => {
-  return <Home ref={database} />
-}
+const FBHome = () => {
+  return <Home fref={database} />;
+};
+
+interface Props {}
 
 class App extends React.Component {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      activeIcon: "find"
+    };
+  }
+
   render() {
     return (
       <div id="main">
         <Route exact={true} path="/" component={FBHome} />
+        <Route exact={true} path="/login" component={Login} />
+        <Route exact={true} path="/app/find" component={Find} />
+        <Route path="/app" component={MobNavBar} />
       </div>
     );
   }
