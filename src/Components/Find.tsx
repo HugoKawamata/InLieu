@@ -5,12 +5,13 @@ import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-map
 import { Segment, Input, Button } from "semantic-ui-react";
 
 interface Props {
-
+  fref: firebase.database.Reference;
 }
+
 interface State {
   lat: number;
   lng: number;
-  markers: ToiletMarker[]
+  markers: JSX.Element[]
 }
 
 interface ToiletMarker {
@@ -34,7 +35,26 @@ export default class Find extends React.Component<Props, State> {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition((pos) => {
       this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
+    });
+    // None of this works
+    this.props.fref.child("markers").on('value', (markers) => {
+      let newMarkers = [];
+      if (markers) {
+        for (let key in markers) {
+          if (markers.hasOwnProperty(key)) {
+            let value = markers[key];
+            if (value.approved === 1) {
+              newMarkers.push(<Marker key={key} position={{ lat: value.lat, lng: value.lng }} />);
+            }
+          }
+        }
+      }
+      this.setState({markers: newMarkers});
     })
+  }
+
+  componentWillUnmount() {
+    this.props.fref.child("markers").off();
   }
 
   MapComponent = compose(
@@ -52,15 +72,16 @@ export default class Find extends React.Component<Props, State> {
     defaultZoom={15} // Or 16. The larger the number, the more zoomed in
     defaultCenter={{ lat: this.state.lat, lng: this.state.lng }}
     >
-      <Marker position={{ lat: -34.397, lng: 150.644 }} />
+      {this.state.markers}
     </GoogleMap>
   ));
 
   render() {
+    //alert(this.state.markers);
     return (
       <Segment attached="bottom" className="map">
         <div className="map">
-          {(this.state.lat !== 0 && this.state.lng !== 0) ? <this.MapComponent/> : <div className="placeholder-map" />}
+          {(this.state.lat !== 0 && this.state.lng !== 0 && this.state.markers.length !== 0) ? <this.MapComponent/> : <div className="placeholder-map" />}
         </div>
       </Segment>
     );

@@ -14,6 +14,10 @@ const FBHome = () => {
   return <Home fref={database} />;
 };
 
+const FBFind = () => {
+  return <Find fref={database} />;
+}
+
 interface Props {}
 
 class App extends React.Component {
@@ -30,7 +34,7 @@ class App extends React.Component {
         <Route path="/app" component={MobNavBar} />
         <Route exact={true} path="/" component={FBHome} />
         <Route exact={true} path="/login" component={Login} />
-        <Route exact={true} path="/app/find" component={Find} />
+        <Route exact={true} path="/app/find" component={FBFind} />
       </div>
     );
   }
