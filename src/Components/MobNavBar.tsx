@@ -14,7 +14,7 @@ interface State { }
 export default class MobNavBar extends React.Component<Props, State> {
   render() {
     return (
-      <Menu attached="top" tabular={true}>
+      <Menu attached="top" className="mobnavbar" tabular={true}>
         <Link to="/app/find">
           <Menu.Item name="find" active={this.props.location.pathname === "/app/find"}>
             Find

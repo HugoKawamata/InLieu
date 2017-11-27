@@ -14,6 +14,20 @@ body {
   background-color: $body-bg;
 }
 
+#main {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+.mobnavbar {
+  flex: 0 1 auto;
+}
+
+.segment {
+  flex: 1 1 auto;
+}
+
 .loginPage {
   padding: 2em !important;
   margin-bottom: 20vh !important;
@@ -28,6 +42,10 @@ body {
 
 .ui.tabular.menu {
   border-bottom: 0px;
+}
+
+.ui.map-segment {
+  padding: 0px;
 }
 
 .menu > a > :not(.active) {
