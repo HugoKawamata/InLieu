@@ -10,8 +10,14 @@ interface Props {
 interface State {
   lat: number;
   lng: number;
+  markers: ToiletMarker[]
 }
 
+interface ToiletMarker {
+  lat: number;
+  lng: number;
+  approved: boolean;
+}
 
 const SMapComponent = "Hello";
 
@@ -21,6 +27,7 @@ export default class Find extends React.Component<Props, State> {
     this.state = {
       lat: 0,
       lng: 0,
+      markers: [],
     }
   }
 
