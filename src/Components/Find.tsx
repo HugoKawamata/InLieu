@@ -4,8 +4,10 @@ import { withProps, compose } from "recompose";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { Segment, Input, Button } from "semantic-ui-react";
 
+import fbi from "../FirebaseInstance";
+
 interface Props {
-  fref: firebase.database.Reference;
+  fdb: firebase.database.Database;
 }
 
 interface State {
@@ -37,24 +39,31 @@ export default class Find extends React.Component<Props, State> {
       this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
     });
     // None of this works
-    this.props.fref.child("markers").on('value', (markers) => {
+    
+    this.props.fdb.ref("markers").on('value', (markersRef) => {
       let newMarkers = [];
-      if (markers) {
+      if (markersRef) {
+        let markers = markersRef.val();
         for (let key in markers) {
           if (markers.hasOwnProperty(key)) {
             let value = markers[key];
             if (value.approved === 1) {
               newMarkers.push(<Marker key={key} position={{ lat: value.lat, lng: value.lng }} />);
+            } else {
+              console.log("marker " + key + "is not approved")
             }
+          } else {
+            console.log("marker " + key + " was not present in actual db.")
           }
         }
       }
       this.setState({markers: newMarkers});
     })
+    
   }
 
   componentWillUnmount() {
-    this.props.fref.child("markers").off();
+    this.props.fdb.ref("markers").off();
   }
 
   MapComponent = compose(

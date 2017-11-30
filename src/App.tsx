@@ -2,20 +2,20 @@ import * as React from "react";
 import { Route } from "react-router-dom";
 import "./App.css";
 
-import firebase from "./firebase";
+import firebase from "./FirebaseInstance";
 import Home from "./Components/Home";
 import Login from "./Components/Login";
 import Find from "./Components/Find";
 import MobNavBar from "./Components/MobNavBar";
 
-let database = firebase.database().ref();
+let database = firebase.database();
 
 const FBHome = () => {
-  return <Home fref={database} />;
+  return <Home fdb={database} />;
 };
 
 const FBFind = () => {
-  return <Find fref={database} />;
+  return <Find fdb={database} />;
 }
 
 interface Props {}

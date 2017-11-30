@@ -5,7 +5,7 @@ import { Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 interface HomeProps {
-  fref: any;
+  fdb: firebase.database.Database;
 }
 
 interface State { }
