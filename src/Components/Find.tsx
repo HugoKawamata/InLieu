@@ -8,6 +8,7 @@ import fbi from "../FirebaseInstance";
 
 interface Props {
   fdb: firebase.database.Database;
+  toilets: Object[];
 }
 
 interface State {
@@ -30,7 +31,8 @@ export default class Find extends React.Component<Props, State> {
     this.state = {
       lat: 0,
       lng: 0,
-      markers: [],
+      markers: this.props.toilets.map((toilet) => 
+        <Marker key={toilet["key"]} position={{ lat: toilet["data"]["lat"], lng: toilet["data"]["lng"] }} />)
     }
   }
 
@@ -38,32 +40,6 @@ export default class Find extends React.Component<Props, State> {
     navigator.geolocation.getCurrentPosition((pos) => {
       this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
     });
-    // None of this works
-    
-    this.props.fdb.ref("markers").on('value', (markersRef) => {
-      let newMarkers = [];
-      if (markersRef) {
-        let markers = markersRef.val();
-        for (let key in markers) {
-          if (markers.hasOwnProperty(key)) {
-            let value = markers[key];
-            if (value.approved === 1) {
-              newMarkers.push(<Marker key={key} position={{ lat: value.lat, lng: value.lng }} />);
-            } else {
-              console.log("marker " + key + "is not approved")
-            }
-          } else {
-            console.log("marker " + key + " was not present in actual db.")
-          }
-        }
-      }
-      this.setState({markers: newMarkers});
-    })
-    
-  }
-
-  componentWillUnmount() {
-    this.props.fdb.ref("markers").off();
   }
 
   MapComponent = compose(
@@ -86,7 +62,6 @@ export default class Find extends React.Component<Props, State> {
   ));
 
   render() {
-    //alert(this.state.markers);
     return (
       <Segment attached="bottom" className="map">
         <div className="map">
