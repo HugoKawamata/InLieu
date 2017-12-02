@@ -33,8 +33,24 @@ body {
   margin: 0px 20px 20vh 20px !important;
 }
 
+.review {
+  text-align: center;
+}
+
+.new-toilet-button {
+  margin-bottom: 1em !important;
+  text-align: center;
+}
+
 .fullheight-flexbox {
   height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ninety-flexbox {
+  height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -51,8 +67,4 @@ body {
 .menu > a > :not(.active) {
   background-color: $inactive-tab-bg !important;
   color: $inactive-tab-icon !important;
-}
-
-.active {
-  background-color: red;
 }

@@ -2,7 +2,7 @@ import * as React from "react";
 import * as firebase from "firebase";
 import { withProps, compose } from "recompose";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-import { Segment, Input, Button } from "semantic-ui-react";
+import { Segment, Input, Button, Loader } from "semantic-ui-react";
 
 import fbi from "../FirebaseInstance";
 
@@ -24,6 +24,14 @@ interface ToiletMarker {
 }
 
 const SMapComponent = "Hello";
+
+const LoadingMap = () => 
+  (
+    <div className="ninety-flexbox">
+      <Loader active inline='centered' />
+    </div>
+  )
+
 
 export default class Find extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -63,9 +71,10 @@ export default class Find extends React.Component<Props, State> {
 
   render() {
     return (
-      <Segment attached="bottom" className="map">
+      <Segment attached="bottom" className="find">
         <div className="map">
-          {(this.state.lat !== 0 && this.state.lng !== 0 && this.state.markers.length !== 0) ? <this.MapComponent/> : <div className="placeholder-map" />}
+          {/* If the state hasn't been set yet, render the loading map */}
+          {(this.state.lat !== 0 && this.state.lng !== 0 && this.state.markers.length !== 0) ? <this.MapComponent/> : <LoadingMap />}
         </div>
       </Segment>
     );
