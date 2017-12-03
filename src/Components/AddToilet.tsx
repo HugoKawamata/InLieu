@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Redirect } from "react-router";
 import * as firebase from "firebase";
 import { Segment, Input, Button, Form, Rating } from "semantic-ui-react";
 
@@ -11,11 +12,12 @@ interface State {
   useGeolocation: number;
   address: string;
   aestheticRating: number;
-  busynessRating: number;
+  quietnessRating: number;
   cleanlinessRating: number;
   sex: string;
   numStalls: number;
   paperTowels: number;
+  submitted: boolean;
 }
 
 export default class AddToilet extends React.Component<Props, State> {
@@ -26,31 +28,22 @@ export default class AddToilet extends React.Component<Props, State> {
       useGeolocation: -1,
       address: "",
       aestheticRating: -1,
-      busynessRating: -1,
+      quietnessRating: -1,
       cleanlinessRating: -1,
       sex: "",
       numStalls: 1,
-      paperTowels: -1
+      paperTowels: -1,
+      submitted: false
     }
+
+    this.submitToilet = this.submitToilet.bind(this);
   }
 
-  async function submitToilet() {
-    ///////////////////////
-    // TODO: Verify form //
-    ///////////////////////
-
-    let lat, lng;
-
-    if (this.state.useGeolocation === 1) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        lat = pos.coords.latitude;
-        lng = pos.coords.longitude;
-        console.log(lat);
-      });
-    }
-
-    /*
-    this.props.fdb.ref("toilets").set({
+  pushToiletData = (lat: number, lng: number, address: string) => {
+    console.log(lat);
+    console.log(lng);
+    console.log(address);
+    let data = {
       accessible: this.state.accessible,
       address: address,
       approved: 0,
@@ -59,11 +52,11 @@ export default class AddToilet extends React.Component<Props, State> {
           numReviews: 1,
           rating: this.state.aestheticRating
         },
-        busynessRating: {
+        quietness: {
           numReviews: 1,
-          rating: this.state.busynessRating
+          rating: this.state.quietnessRating
         },
-        cleanlinessRating: {
+        cleanliness: {
           numReviews: 1,
           rating: this.state.cleanlinessRating,
         }
@@ -73,7 +66,56 @@ export default class AddToilet extends React.Component<Props, State> {
       numStalls: this.state.numStalls,
       paperTowels: this.state.paperTowels,
       sex: this.state.sex,
+    };
+    this.props.fdb.ref("toilets").push().set(data);
+    this.setState({submitted: true});
+  }
+
+  getAddressFromLatLng = (lat: number, lng: number) => {
+    // Get the address of the current location using a fetch
+    const self = this;
+    const address = fetch("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true",
+        {
+            method: "POST",
+            credentials: "same-origin"
+        }
+    ).then(function(response) {
+      if (response.status !== 200) {
+          console.log("Error " +
+          response.status);
+          return;
+      }
+
+      response.json().then((json) => {
+        const address = json.results[0].address_components[0].short_name + " " +
+            json.results[0].address_components[1].short_name + ", " +
+            json.results[0].address_components[2].short_name
+        self.pushToiletData(lat, lng, address);
+      })
+    })
+  }
+
+  getLatLngFromLocation = () => {
+    // Get the current location
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      this.getAddressFromLatLng(lat, lng);
     });
+  }
+
+  async submitToilet() {
+    ///////////////////////
+    // TODO: Verify form //
+    ///////////////////////
+
+    if (this.state.useGeolocation === 1) {
+      this.getLatLngFromLocation()
+    } else if (this.state.useGeolocation === 0) {
+
+    }
+
+    /*
     */
   }
 
@@ -108,6 +150,12 @@ export default class AddToilet extends React.Component<Props, State> {
       {text: 4, value: 4},
       {text: "5+", value: 5},
     ]
+    
+    if (this.state.submitted) {
+      return (
+        <Redirect to="/app/review" />
+      )
+    }
 
     return(
       <Segment attached="bottom" className="add-toilet">
@@ -149,10 +197,10 @@ export default class AddToilet extends React.Component<Props, State> {
             />
           </Form.Group>
           <Form.Group inline={true}>
-            <label>Busyness: </label>
+            <label>Quietness: </label>
             <Rating
               icon="star"
-              className="busynessRating"
+              className="quietnessRating"
               maxRating={5}
               onRate={this.handleRate}
             />

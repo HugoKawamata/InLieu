@@ -70,6 +70,7 @@ class App extends React.Component<Props, State> {
         }
       }
       this.setState({toilets: newToilets});
+      console.log("toilets obj = ");
       console.log(newToilets);
     })
   }

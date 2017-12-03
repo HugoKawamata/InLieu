@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import * as firebase from "firebase";
 import { Segment, Input, Button } from "semantic-ui-react";
 
@@ -9,9 +10,9 @@ interface Props {
 
 interface State {}
 
-const ToiletButton = (props: {address: string, gender: string}) => {
-  const color = props.gender == "m" ? "blue" : props.gender == "f" ? "red" : "grey";
-  const genderIcon = props.gender == "m" ? "male" : props.gender == "f" ? "female" : "intergender";
+const ToiletButton = (props: {address: string, sex: string}) => {
+  const color = props.sex == "m" ? "blue" : props.sex == "f" ? "red" : "grey";
+  const genderIcon = props.sex == "m" ? "male" : props.sex == "f" ? "female" : "intergender";
   return (
     <Button.Group fluid={true} color={color}>
       <Button icon={genderIcon} />
@@ -35,16 +36,18 @@ export default class Review extends React.Component<Props, State> {
       <ToiletButton
         key={toilet["key"]}
         address={toilet["data"].address} 
-        gender={toilet["data"].gender}
+        sex={toilet["data"].sex}
       />
     )
 
     console.log(toiletButtons);
     return (
       <Segment attached="bottom" className="review">
-        <Button className="new-toilet-button" color="yellow">
-          Add New Toilet
-        </Button>
+        <Link to="/app/review/addtoilet">
+          <Button className="new-toilet-button" color="yellow">
+            Add New Toilet
+          </Button>
+        </Link>
         {toiletButtons}
       </Segment>
     )
