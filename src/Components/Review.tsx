@@ -12,10 +12,10 @@ interface State {}
 
 const ToiletButton = (props: {address: string, sex: string}) => {
   const color = props.sex == "m" ? "blue" : props.sex == "f" ? "red" : "grey";
-  const genderIcon = props.sex == "m" ? "male" : props.sex == "f" ? "female" : "intergender";
+  const sexIcon = props.sex == "m" ? "male" : props.sex == "f" ? "female" : "intergender";
   return (
     <Button.Group fluid={true} color={color}>
-      <Button icon={genderIcon} />
+      <Button icon={sexIcon} />
       <Button color={color} basic={true} className="toilet-button">
         {props.address}
       </Button>

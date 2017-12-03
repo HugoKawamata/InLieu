@@ -17,6 +17,7 @@ interface State {
   sex: string;
   numStalls: number;
   paperTowels: number;
+  loading: boolean;
   submitted: boolean;
 }
 
@@ -33,6 +34,7 @@ export default class AddToilet extends React.Component<Props, State> {
       sex: "",
       numStalls: 1,
       paperTowels: -1,
+      loading: false,
       submitted: false
     }
 
@@ -71,6 +73,33 @@ export default class AddToilet extends React.Component<Props, State> {
     this.setState({submitted: true});
   }
 
+  // Gets latlng from a given address and pushes the current state as a new toilet
+  getLatLngFromAddress = (address: string) => {
+    const self = this;
+
+    fetch("https://maps.googleapis.com/maps/api/geocode/json?address=" +
+        address +
+        "&key=AIzaSyDyirGlSYkBHxlZHeTT9MPgMy9zi5bUTtw",
+        {
+            method: "POST",
+            credentials: "same-origin"
+        }
+    ).then(function(response) {
+      if (response.status !== 200) {
+          console.log("Error " +
+          response.status);
+          return;
+      }
+
+      response.json().then((json) => {
+        const lat = json.results[0].geometry.location.lat;
+        const lng = json.results[0].geometry.location.lng;
+        self.pushToiletData(lat, lng, address);
+      })
+    })
+  }
+
+  // Gets the address from a given set of coordinates and pushes the current state as a new toilet
   getAddressFromLatLng = (lat: number, lng: number) => {
     // Get the address of the current location using a fetch
     const self = this;
@@ -95,6 +124,7 @@ export default class AddToilet extends React.Component<Props, State> {
     })
   }
 
+  // Gets the latlng from th user's geolocation and calls getAddressFromLatLng using the retrieved coords
   getLatLngFromLocation = () => {
     // Get the current location
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -105,6 +135,8 @@ export default class AddToilet extends React.Component<Props, State> {
   }
 
   async submitToilet() {
+    this.setState({loading: true})
+    
     ///////////////////////
     // TODO: Verify form //
     ///////////////////////
@@ -112,11 +144,8 @@ export default class AddToilet extends React.Component<Props, State> {
     if (this.state.useGeolocation === 1) {
       this.getLatLngFromLocation()
     } else if (this.state.useGeolocation === 0) {
-
+      this.getLatLngFromAddress(this.state.address);
     }
-
-    /*
-    */
   }
 
   handleChange = (e: React.FormEvent<HTMLInputElement>, { name, value }: any) => {
@@ -159,7 +188,7 @@ export default class AddToilet extends React.Component<Props, State> {
 
     return(
       <Segment attached="bottom" className="add-toilet">
-        <Form>
+        <Form loading={this.state.loading}>
           <Form.Group inline={true}>
             <label>Use my geolocation to get the toilet's address:</label>
             <Form.Radio 
@@ -171,7 +200,7 @@ export default class AddToilet extends React.Component<Props, State> {
             />
             <Form.Radio
               label="no" 
-              name="atToiletLocation"
+              name="useGeolocation"
               value={0} 
               checked={this.state.useGeolocation === 0} 
               onChange={this.handleChange}
