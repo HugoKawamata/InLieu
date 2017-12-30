@@ -2,6 +2,7 @@ import * as React from "react";
 import { Link } from "react-router-dom";
 import * as firebase from "firebase";
 import { Segment, Input, Button } from "semantic-ui-react";
+import StandaloneSearchBox from "react-google-maps/lib/components/places/StandaloneSearchBox";
 
 interface Props {
   fdb: firebase.database.Database;

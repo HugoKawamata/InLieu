@@ -2,6 +2,10 @@ import * as React from "react";
 import { Redirect } from "react-router";
 import * as firebase from "firebase";
 import { Segment, Input, Button, Form, Rating } from "semantic-ui-react";
+import withScriptjs from "react-google-maps/lib/withScriptjs";
+const { compose, withProps, lifecycle } = require("recompose");
+const { withScriptJS } = require("react-google-maps");
+const { StandaloneSearchBox } = require("react-google-maps/lib/components/places/StandaloneSearchBox");
 
 interface Props {
   fdb: firebase.database.Database;
@@ -161,14 +165,66 @@ export default class AddToilet extends React.Component<Props, State> {
     this.setState(obj);
   }
 
+  // This comes from the documentation of react-google-maps
+  // https://tomchentw.github.io/react-google-maps/#standalonesearchbox
+  SearchBoxComponent = compose(
+    withProps({
+      googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry," +
+      "drawing,places&key=AIzaSyDaSKRHqKVoX30QjzSHFRYupe92K_NpJpk",
+      loadingElement: <div style={{ height: `100%` }} />,
+      containerElement: <div style={{ height: `400px` }} />,
+    }),
+    lifecycle({
+      // Dodgy hacks happening here due to the react-google-maps documentation not working nicely with typescript
+      componentWillMount() {
+        let searchBoxRef: any;
+
+        this.setState({
+          places: [],
+          onSearchBoxMounted: (ref: any) => {
+            searchBoxRef = ref;
+          },
+          onPlacesChanged: () => {
+            const places = searchBoxRef.getPlaces();
+            this.setState({ places })
+          }
+        })
+      }
+    }),
+    withScriptjs
+  )((props: any) =>
+    (
+      <div data-standalone-searchbox="">
+        <StandaloneSearchBox
+          ref={props.onSearchBoxMounted}
+          bounds={props.bounds}
+          onPlacesChanged={props.onPlacesChanged}
+        >
+          <input
+            type="text"
+            placeholder="Enter Toilet Address"
+            style={{
+              boxSizing: `border-box`,
+              border: `1px solid transparent`,
+              width: `240px`,
+              height: `32px`,
+              padding: `0 12px`,
+              marginBottom: `1em`,
+              borderRadius: `3px`,
+              boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+              fontSize: `14px`,
+              outline: `none`,
+              textOverflow: `ellipses`,
+            }}
+          />
+        </StandaloneSearchBox>
+      </div>
+    )
+  )
+
   render() {
     const addressInput = this.state.useGeolocation === 0 ?
-      (<Form.Input
-        label="Address of Toilet"
-        name="address"
-        value={this.state.address}
-        onChange={this.handleChange}
-      />) :
+      <this.SearchBoxComponent/> :
       <div/>
 
     const stallOptions = [
