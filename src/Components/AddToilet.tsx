@@ -14,8 +14,6 @@ interface Props {
 interface State {
   accessible: number;
   useGeolocation: number;
-  lat: number;
-  lng: number;
   address: string;
   aestheticRating: number;
   quietnessRating: number;
@@ -33,8 +31,6 @@ export default class AddToilet extends React.Component<Props, State> {
     this.state = {
       accessible: -1,
       useGeolocation: -1,
-      lat: 0,
-      lng: 0,
       address: "",
       aestheticRating: -1,
       quietnessRating: -1,
@@ -126,7 +122,8 @@ export default class AddToilet extends React.Component<Props, State> {
       response.json().then((json) => {
         const address = json.results[0].address_components[0].short_name + " " +
             json.results[0].address_components[1].short_name + ", " +
-            json.results[0].address_components[2].short_name
+            json.results[0].address_components[2].short_name + ", " +
+            json.results[0].address_components[3].short_name
         self.pushToiletData(lat, lng, address);
       })
     })
@@ -197,15 +194,16 @@ export default class AddToilet extends React.Component<Props, State> {
     }),
     withScriptjs
   )((props: any) => {
+    // Smelly code: additional effects in a render function are an anti-pattern
+    // Should be refactored out to componentWillMount.
     if (props.places.length !== 0) {
       console.log(props.places);
       console.log(this.state);
       this.setState({
         address: props.places[0].address_components[0].short_name + " " +
                 props.places[0].address_components[1].short_name + ", " +
-                props.places[0].address_components[2].short_name,
-        lat: props.places[0].geometry.location.lat,
-        lng: props.places[0].geometry.location.lng
+                props.places[0].address_components[2].short_name + ", " +
+                props.places[0].address_components[3].short_name, 
       });
     };
     return (
