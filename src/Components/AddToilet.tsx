@@ -14,6 +14,8 @@ interface Props {
 interface State {
   accessible: number;
   useGeolocation: number;
+  lat: number;
+  lng: number;
   address: string;
   aestheticRating: number;
   quietnessRating: number;
@@ -31,6 +33,8 @@ export default class AddToilet extends React.Component<Props, State> {
     this.state = {
       accessible: -1,
       useGeolocation: -1,
+      lat: 0,
+      lng: 0,
       address: "",
       aestheticRating: -1,
       quietnessRating: -1,
@@ -186,14 +190,25 @@ export default class AddToilet extends React.Component<Props, State> {
           },
           onPlacesChanged: () => {
             const places = searchBoxRef.getPlaces();
-            this.setState({ places })
+            this.setState({ places });
           }
         })
       }
     }),
     withScriptjs
-  )((props: any) =>
-    (
+  )((props: any) => {
+    if (props.places.length !== 0) {
+      console.log(props.places);
+      console.log(this.state);
+      this.setState({
+        address: props.places[0].address_components[0].short_name + " " +
+                props.places[0].address_components[1].short_name + ", " +
+                props.places[0].address_components[2].short_name,
+        lat: props.places[0].geometry.location.lat,
+        lng: props.places[0].geometry.location.lng
+      });
+    };
+    return (
       <div data-standalone-searchbox="">
         <StandaloneSearchBox
           ref={props.onSearchBoxMounted}
@@ -219,7 +234,7 @@ export default class AddToilet extends React.Component<Props, State> {
           />
         </StandaloneSearchBox>
       </div>
-    )
+    )}
   )
 
   render() {
