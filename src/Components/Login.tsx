@@ -25,7 +25,7 @@ export default class Login extends React.Component<Props, State> {
   }
 
   register = (email: string, password: string) => {
-    this.setState({registerLoading: true})
+    this.setState({registerLoading: true});
     firebase.auth().createUserWithEmailAndPassword(email, password).then(
       () => {
         this.setState({validLogin: true});
@@ -39,7 +39,7 @@ export default class Login extends React.Component<Props, State> {
   }
 
   signIn = (email: string, password: string) => {
-    this.setState({signInLoading: true})
+    this.setState({signInLoading: true});
     firebase.auth().signInWithEmailAndPassword(email, password).then(
       () => {
         this.setState({validLogin: true});

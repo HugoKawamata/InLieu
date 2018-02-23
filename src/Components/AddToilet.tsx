@@ -1,7 +1,8 @@
+/*global google*/
 import * as React from "react";
 import { Redirect } from "react-router";
 import * as firebase from "firebase";
-import { Segment, Input, Button, Form, Rating } from "semantic-ui-react";
+import { Segment, Input, Button, Form, Rating, Message } from "semantic-ui-react";
 import withScriptjs from "react-google-maps/lib/withScriptjs";
 const { compose, withProps, lifecycle } = require("recompose");
 const { withScriptJS } = require("react-google-maps");
@@ -23,8 +24,15 @@ interface State {
   paperTowels: number;
   loading: boolean;
   submitted: boolean;
+  multistorey: number;
+  floor: number;
+  failedSubmission: boolean;
 }
 
+// Rather than booleans, many states are numbers to represent 3 options:
+// -1 : Unset
+//  0 : False
+//  1 : True
 export default class AddToilet extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -39,8 +47,11 @@ export default class AddToilet extends React.Component<Props, State> {
       numStalls: 1,
       paperTowels: -1,
       loading: false,
-      submitted: false
-    }
+      submitted: false,
+      multistorey: -1,
+      floor: 1,
+      failedSubmission: false
+    };
 
     this.submitToilet = this.submitToilet.bind(this);
   }
@@ -72,6 +83,8 @@ export default class AddToilet extends React.Component<Props, State> {
       numStalls: this.state.numStalls,
       paperTowels: this.state.paperTowels,
       sex: this.state.sex,
+      mutlistorey: this.state.multistorey,
+      floor: this.state.floor
     };
     this.props.fdb.ref("toilets").push().set(data);
     this.setState({submitted: true});
@@ -82,12 +95,12 @@ export default class AddToilet extends React.Component<Props, State> {
     const self = this;
 
     fetch("https://maps.googleapis.com/maps/api/geocode/json?address=" +
-        address +
-        "&key=AIzaSyDyirGlSYkBHxlZHeTT9MPgMy9zi5bUTtw",
-        {
-            method: "POST",
-            credentials: "same-origin"
-        }
+      address +
+      "&key=AIzaSyDyirGlSYkBHxlZHeTT9MPgMy9zi5bUTtw",
+      {
+        method: "POST",
+        credentials: "same-origin"
+      }
     ).then(function(response) {
       if (response.status !== 200) {
           console.log("Error " +
@@ -99,8 +112,8 @@ export default class AddToilet extends React.Component<Props, State> {
         const lat = json.results[0].geometry.location.lat;
         const lng = json.results[0].geometry.location.lng;
         self.pushToiletData(lat, lng, address);
-      })
-    })
+      });
+    });
   }
 
   // Gets the address from a given set of coordinates and pushes the current state as a new toilet
@@ -108,10 +121,10 @@ export default class AddToilet extends React.Component<Props, State> {
     // Get the address of the current location using a fetch
     const self = this;
     const address = fetch("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true",
-        {
-            method: "POST",
-            credentials: "same-origin"
-        }
+      {
+        method: "POST",
+        credentials: "same-origin"
+      }
     ).then(function(response) {
       if (response.status !== 200) {
           console.log("Error " +
@@ -121,12 +134,12 @@ export default class AddToilet extends React.Component<Props, State> {
 
       response.json().then((json) => {
         const address = json.results[0].address_components[0].short_name + " " +
-            json.results[0].address_components[1].short_name + ", " +
-            json.results[0].address_components[2].short_name + ", " +
-            json.results[0].address_components[3].short_name
+          json.results[0].address_components[1].short_name + ", " +
+          json.results[0].address_components[2].short_name + ", " +
+          json.results[0].address_components[3].short_name;
         self.pushToiletData(lat, lng, address);
-      })
-    })
+      });
+    });
   }
 
   // Gets the latlng from th user's geolocation and calls getAddressFromLatLng using the retrieved coords
@@ -139,15 +152,39 @@ export default class AddToilet extends React.Component<Props, State> {
     });
   }
 
+  formIsValid = () => {
+    return !(
+      this.state.aestheticRating === -1 ||
+      this.state.cleanlinessRating === -1 ||
+      this.state.quietnessRating === -1 ||
+      this.state.accessible === -1 ||
+      this.state.sex === "" ||
+      this.state.paperTowels === -1 ||
+      this.state.multistorey === -1 ||
+      this.state.useGeolocation === -1 ||
+      (this.state.useGeolocation === 0 && this.state.address === "")
+    );
+  }
+
   async submitToilet() {
-    this.setState({loading: true})
     
     ///////////////////////
     // TODO: Verify form //
     ///////////////////////
+    if (
+      !this.formIsValid()
+    ) {
+      this.setState({failedSubmission: true});
+      return;
+    } else {
+      this.setState({failedSubmission: false, loading: false});
+    }
+
+    // Up to here
+    this.setState({loading: true});
 
     if (this.state.useGeolocation === 1) {
-      this.getLatLngFromLocation()
+      this.getLatLngFromLocation();
     } else if (this.state.useGeolocation === 0) {
       this.getLatLngFromAddress(this.state.address);
     }
@@ -160,7 +197,7 @@ export default class AddToilet extends React.Component<Props, State> {
   }
 
   // Semantic Ratings have no name, so use a className instead to uniquely ID inputs
-  handleRate = (e: React.MouseEvent<HTMLDivElement>, { className, rating }:any) => {
+  handleRate = (e: React.MouseEvent<HTMLDivElement>, { className, rating }: any) => {
     let obj = {};
     obj[className] = rating;
     this.setState(obj);
@@ -189,7 +226,7 @@ export default class AddToilet extends React.Component<Props, State> {
             const places = searchBoxRef.getPlaces();
             this.setState({ places });
           }
-        })
+        });
       }
     }),
     withScriptjs
@@ -197,15 +234,14 @@ export default class AddToilet extends React.Component<Props, State> {
     // Smelly code: additional effects in a render function are an anti-pattern
     // Should be refactored out to componentWillMount.
     if (props.places.length !== 0) {
-      console.log(props.places);
-      console.log(this.state);
       this.setState({
         address: props.places[0].address_components[0].short_name + " " +
                 props.places[0].address_components[1].short_name + ", " +
                 props.places[0].address_components[2].short_name + ", " +
                 props.places[0].address_components[3].short_name, 
       });
-    };
+    }
+
     return (
       <div data-standalone-searchbox="">
         <StandaloneSearchBox
@@ -232,13 +268,64 @@ export default class AddToilet extends React.Component<Props, State> {
           />
         </StandaloneSearchBox>
       </div>
-    )}
-  )
+    ); }
+  );
 
   render() {
     const addressInput = this.state.useGeolocation === 0 ?
+      // Then
       <this.SearchBoxComponent/> :
-      <div/>
+      // Else
+      <div/>;
+
+    const floorInput = this.state.multistorey === 1 ?
+      // Then
+      (
+        <Form.Input
+          label="Floor Number"
+          name="floor"
+          value={this.state.floor}
+          onChange={this.handleChange}
+        />
+      ) :
+      // Else
+      <div/>;
+
+    const validationMsg = this.state.failedSubmission ?
+      // Then
+      (
+        <Message 
+          negative={!this.formIsValid()}
+          positive={this.formIsValid()}
+        >
+          <Message.Header>
+            {this.formIsValid() ? 
+            "Nice!":
+            "Please fill out the required fields"}
+          </Message.Header>
+            {
+              this.formIsValid() ? 
+              <p>You can submit again now.</p> :
+              (
+                <div>
+                  <p>Please ensure the following fields are filled out: </p>
+                  <ul>
+                    {this.state.useGeolocation === -1 ? <li>Use Geolocation</li> : ""}
+                    {this.state.useGeolocation === 0 ? <li>Address</li> : ""}
+                    {this.state.aestheticRating === -1 ? <li>Aesthetic rating</li> : ""}
+                    {this.state.cleanlinessRating === -1 ? <li>Cleanliness rating</li> : ""}
+                    {this.state.quietnessRating === -1 ? <li>Quietness rating</li> : ""}
+                    {this.state.accessible === -1 ? <li>Wheelchair accessibility</li> : ""}
+                    {this.state.sex === "" ? <li>Sex</li> : ""}
+                    {this.state.paperTowels === -1 ? <li>Paper towels</li> : ""}
+                    {this.state.multistorey === -1 ? <li>Multistorey building</li> : ""}
+                  </ul>
+                </div>
+              )
+            }
+        </Message>
+      ) :
+      <div/>;
 
     const stallOptions = [
       {text: 0, value: 0},
@@ -247,16 +334,17 @@ export default class AddToilet extends React.Component<Props, State> {
       {text: 3, value: 3},
       {text: 4, value: 4},
       {text: "5+", value: 5},
-    ]
+    ];
     
     if (this.state.submitted) {
       return (
         <Redirect to="/app/review" />
-      )
+      );
     }
 
     return(
       <Segment attached="bottom" className="add-toilet">
+        {validationMsg}
         <Form loading={this.state.loading}>
           <Form.Group inline={true}>
             <label>Use my geolocation to get the toilet's address:</label>
@@ -362,6 +450,24 @@ export default class AddToilet extends React.Component<Props, State> {
             />
           </Form.Group>
           <Form.Group inline={true}>
+            <label>Multi-storey building:</label>
+            <Form.Radio
+              label="yes" 
+              name="multistorey"
+              value={1} 
+              checked={this.state.multistorey === 1} 
+              onChange={this.handleChange}
+            />
+            <Form.Radio
+              label="no" 
+              name="multistorey"
+              value={0} 
+              checked={this.state.multistorey === 0} 
+              onChange={this.handleChange}
+            />
+          </Form.Group>
+          {floorInput}
+          <Form.Group inline={true}>
             <label>Number of Stalls:</label>
             <Form.Dropdown
               placeholder="Please select"
@@ -379,6 +485,6 @@ export default class AddToilet extends React.Component<Props, State> {
           </Form.Button>
         </Form>
       </Segment>
-    )
+    );
   }
 }

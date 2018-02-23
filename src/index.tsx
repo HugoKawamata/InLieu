@@ -5,7 +5,7 @@ import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 import "./index.css";
 import "semantic-ui-css/semantic.min.css";
-import "./Styles/style.css"
+import "./Styles/style.css";
 
 ReactDOM.render(
   <BrowserRouter>

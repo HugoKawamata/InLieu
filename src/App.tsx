@@ -22,7 +22,7 @@ const FBFind = (toilets: Object[]) => {
       fdb={database}
       toilets={toilets}
     />);
-}
+};
 
 const FBReview = (toilets: Object[]) => {
   return (
@@ -31,13 +31,13 @@ const FBReview = (toilets: Object[]) => {
       toilets={toilets}
     />
   );
-}
+};
 
 const FBAddToilet = () => {
   return (
     <AddToilet fdb={database} />
   );
-}
+};
 
 interface Props {}
 interface State {
@@ -56,7 +56,7 @@ class App extends React.Component<Props, State> {
 
   componentDidMount() {
     // Sets state.markers to be a list of all approved markers in the entire database
-    database.ref("toilets").on('value', (toiletsRef) => {
+    database.ref("toilets").on("value", (toiletsRef) => {
       let newToilets = [];
       if (toiletsRef) {
         let toilets = toiletsRef.val();
@@ -70,9 +70,7 @@ class App extends React.Component<Props, State> {
         }
       }
       this.setState({toilets: newToilets});
-      console.log("toilets obj = ");
-      console.log(newToilets);
-    })
+    });
   }
 
   componentWillUnmount() {

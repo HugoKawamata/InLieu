@@ -1,3 +1,4 @@
+/*global google*/
 import * as React from "react";
 import * as firebase from "firebase";
 import { withProps, compose } from "recompose";
@@ -14,7 +15,7 @@ interface Props {
 interface State {
   lat: number;
   lng: number;
-  markers: JSX.Element[]
+  markers: JSX.Element[];
 }
 
 interface ToiletMarker {
@@ -28,10 +29,9 @@ const SMapComponent = "Hello";
 const LoadingMap = () => 
   (
     <div className="ninety-flexbox">
-      <Loader active inline='centered' />
+      <Loader active={true} inline="centered" />
     </div>
-  )
-
+  );
 
 export default class Find extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -41,7 +41,7 @@ export default class Find extends React.Component<Props, State> {
       lng: 0,
       markers: this.props.toilets.map((toilet) => 
         <Marker key={toilet["key"]} position={{ lat: toilet["data"]["lat"], lng: toilet["data"]["lng"] }} />)
-    }
+    };
   }
 
   componentDidMount() {
@@ -62,8 +62,8 @@ export default class Find extends React.Component<Props, State> {
     withGoogleMap
   )((props) => (
     <GoogleMap
-    defaultZoom={15} // Or 16. The larger the number, the more zoomed in
-    defaultCenter={{ lat: this.state.lat, lng: this.state.lng }}
+      defaultZoom={15} // Or 16. The larger the number, the more zoomed in
+      defaultCenter={{ lat: this.state.lat, lng: this.state.lng }}
     >
       {this.state.markers}
     </GoogleMap>
@@ -74,7 +74,9 @@ export default class Find extends React.Component<Props, State> {
       <Segment attached="bottom" className="find">
         <div className="map">
           {/* If the state hasn't been set yet, render the loading map */}
-          {(this.state.lat !== 0 && this.state.lng !== 0 && this.state.markers.length !== 0) ? <this.MapComponent/> : <LoadingMap />}
+          {(this.state.lat !== 0 && this.state.lng !== 0 && this.state.markers.length !== 0) ?
+            <this.MapComponent/> :
+            <LoadingMap />}
         </div>
       </Segment>
     );
