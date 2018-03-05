@@ -9,6 +9,7 @@ import Find from "./Components/Find";
 import Review from "./Components/Review";
 import AddToilet from "./Components/AddToilet";
 import MobNavBar from "./Components/MobNavBar";
+import ReviewToilet from "./Components/ReviewToilet";
 
 let database = firebase.database();
 
@@ -38,6 +39,12 @@ const FBAddToilet = () => {
     <AddToilet fdb={database} />
   );
 };
+
+const FBReviewToilet = () => {
+  return (
+    <ReviewToilet fdb={database} />
+  )
+}
 
 interface Props {}
 interface State {
@@ -86,6 +93,7 @@ class App extends React.Component<Props, State> {
         <Route exact={true} path="/app/find" component={() => FBFind(this.state.toilets)} />
         <Route exact={true} path="/app/review" component={() => FBReview(this.state.toilets)} />
         <Route exact={true} path="/app/review/addtoilet" component={FBAddToilet} />
+        <Route exact={true} path="/app/review/toilet/:toiletID" component={FBReviewToilet} />
       </div>
     );
   }

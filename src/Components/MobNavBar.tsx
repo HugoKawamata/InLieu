@@ -21,7 +21,7 @@ export default class MobNavBar extends React.Component<Props, State> {
           </Menu.Item>
         </Link>
         <Link to="/app/review">
-          <Menu.Item name="review" active={this.props.location.pathname === "/app/review"}>
+          <Menu.Item name="review" active={this.props.location.pathname.slice(0,11) === "/app/review"}>
             Review
           </Menu.Item>
         </Link>

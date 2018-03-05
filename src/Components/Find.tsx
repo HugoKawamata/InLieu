@@ -16,6 +16,8 @@ interface State {
   lat: number;
   lng: number;
   markers: JSX.Element[];
+  // I'm aware this is an anti-pattern
+  mounted: boolean;
 }
 
 interface ToiletMarker {
@@ -39,15 +41,23 @@ export default class Find extends React.Component<Props, State> {
     this.state = {
       lat: 0,
       lng: 0,
+      mounted: false,
       markers: this.props.toilets.map((toilet) => 
         <Marker key={toilet["key"]} position={{ lat: toilet["data"]["lat"], lng: toilet["data"]["lng"] }} />)
     };
   }
 
   componentDidMount() {
+    this.setState({mounted: true});
     navigator.geolocation.getCurrentPosition((pos) => {
-      this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
+      if (this.state.mounted) {
+        this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
+      }
     });
+  }
+
+  componentWillUnmount() {
+    this.setState({mounted: false});
   }
 
   MapComponent = compose(

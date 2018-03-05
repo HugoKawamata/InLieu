@@ -56,6 +56,7 @@ export default class AddToilet extends React.Component<Props, State> {
     this.submitToilet = this.submitToilet.bind(this);
   }
 
+  // Add "number of reviews" to toilet data
   pushToiletData = (lat: number, lng: number, address: string) => {
     console.log(lat);
     console.log(lng);
@@ -66,15 +67,12 @@ export default class AddToilet extends React.Component<Props, State> {
       approved: 0,
       criteria: {
         aesthetic: {
-          numReviews: 1,
           rating: this.state.aestheticRating
         },
         quietness: {
-          numReviews: 1,
           rating: this.state.quietnessRating
         },
         cleanliness: {
-          numReviews: 1,
           rating: this.state.cleanlinessRating,
         }
       },
@@ -84,7 +82,8 @@ export default class AddToilet extends React.Component<Props, State> {
       paperTowels: this.state.paperTowels,
       sex: this.state.sex,
       mutlistorey: this.state.multistorey,
-      floor: this.state.floor
+      floor: this.state.floor,
+      numberOfReviews: 1
     };
     this.props.fdb.ref("toilets").push().set(data);
     this.setState({submitted: true});
@@ -168,9 +167,6 @@ export default class AddToilet extends React.Component<Props, State> {
 
   async submitToilet() {
     
-    ///////////////////////
-    // TODO: Verify form //
-    ///////////////////////
     if (
       !this.formIsValid()
     ) {
@@ -370,6 +366,7 @@ export default class AddToilet extends React.Component<Props, State> {
               icon="star"
               className="aestheticRating"
               maxRating={5}
+              value={this.state.aestheticRating}
               onRate={this.handleRate}
             />
           </Form.Group>
@@ -379,6 +376,7 @@ export default class AddToilet extends React.Component<Props, State> {
               icon="star"
               className="cleanlinessRating"
               maxRating={5}
+              value={this.state.cleanlinessRating}
               onRate={this.handleRate}
             />
           </Form.Group>
@@ -388,6 +386,7 @@ export default class AddToilet extends React.Component<Props, State> {
               icon="star"
               className="quietnessRating"
               maxRating={5}
+              value={this.state.quietnessRating}
               onRate={this.handleRate}
             />
           </Form.Group>
