@@ -175,18 +175,18 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
             />
           </Form.Group>
             {this.state.reviewMode ? (
-                <Form.Button className="positive submit" onClick={this.submitReview}>
+                <Form.Button className="positive inline-button" onClick={this.submitReview}>
                   Submit
                 </Form.Button>
               ) : (
-                <Form.Button className="submit" onClick={() => this.setState({reviewMode: true})}>
+                <Form.Button className="inline-button" onClick={() => this.setState({reviewMode: true})}>
                   Review
                 </Form.Button>
               )
               
             }
             {/* TODO: Make this actually "go back" rather than forward to home */}
-            <Form.Button className="back" onClick={() => this.context.router.history.goBack()}>
+            <Form.Button className="inline-button" onClick={() => this.context.router.history.goBack()}>
               Back
             </Form.Button>
         </Form>

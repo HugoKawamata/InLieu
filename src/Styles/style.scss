@@ -88,6 +88,7 @@ body {
 
 .toilet-button-container {
   .toilet-button-bumper {
+    flex-grow: 0 !important;
     i {
       font-size: 1.5em;
       line-height: 0.75em;
@@ -110,11 +111,6 @@ body {
   }
 }
 
-.form-buttons {
-  .submit {
-    display: inline-block;
-  }
-  .back {
-    display: inline-block;
-  }
+.inline-button {
+  display: inline-block;
 }
