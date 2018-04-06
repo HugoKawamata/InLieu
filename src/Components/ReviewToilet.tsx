@@ -14,6 +14,7 @@ interface State {
   cleanlinessRating: number;
   quietnessRating: number;
   toilet: object;
+  reviewMode: boolean;
   submitted: boolean;
 }
 
@@ -30,6 +31,7 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
       cleanlinessRating: -1,
       quietnessRating: -1,
       toilet: {},
+      reviewMode: false,
       submitted: false
     }
   }
@@ -68,9 +70,14 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
     if (!this.formIsValid()) {
 
     } else {
-      let avgAesthetic = (this.state.aestheticRating + this.state.toilet["criteria"]["aesthetic"]["rating"]) / (this.state.toilet["numberOfReviews"] + 1);
-      let avgCleanliness = (this.state.cleanlinessRating + this.state.toilet["criteria"]["cleanliness"]["rating"]) / (this.state.toilet["numberOfReviews"] + 1);
-      let avgQuietness = (this.state.quietnessRating + this.state.toilet["criteria"]["quietness"]["rating"]) / (this.state.toilet["numberOfReviews"] + 1);
+      let avgAesthetic = (this.state.aestheticRating + (this.state.toilet["criteria"]["aesthetic"]["rating"] * this.state.toilet["numberOfReviews"])) / (this.state.toilet["numberOfReviews"] + 1);
+      let avgCleanliness = (this.state.cleanlinessRating + (this.state.toilet["criteria"]["cleanliness"]["rating"] * this.state.toilet["numberOfReviews"])) / (this.state.toilet["numberOfReviews"] + 1);
+      let avgQuietness = (this.state.quietnessRating + (this.state.toilet["criteria"]["quietness"]["rating"] * this.state.toilet["numberOfReviews"])) / (this.state.toilet["numberOfReviews"] + 1);
+
+      console.log("this.state.aestheticRating: " + this.state.aestheticRating);
+      console.log("this.state.toilet...rating: " + this.state.toilet["criteria"]["aesthetic"]["rating"]);
+      console.log("avgAesthetic: " + avgAesthetic);
+
       let data = {
         criteria: {
           aesthetic: {rating: avgAesthetic},
@@ -94,6 +101,11 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
       return <Redirect to="/app/review" />
     }    
 
+    const aestheticRating = Object.keys(this.state.toilet).length === 0 ? 0 : this.state.toilet["criteria"]["aesthetic"]["rating"];
+    const cleanlinessRating = Object.keys(this.state.toilet).length === 0 ? 0 : this.state.toilet["criteria"]["cleanliness"]["rating"];
+    const quietnessRating = Object.keys(this.state.toilet).length === 0 ? 0 : this.state.toilet["criteria"]["quietness"]["rating"];
+
+    console.log(this.state);
 
     const sexIcon = this.state.toilet["sex"] === "m" ? "male" : this.state.toilet["sex"] === "f" ? "female" : "intergender";
     const floorInfo = this.state.toilet["multistorey"] === 1 ? 
@@ -136,6 +148,8 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               className="aestheticRating"
               maxRating={5}
               onRate={this.handleRate}
+              rating={this.state.reviewMode ? this.state.aestheticRating : aestheticRating}
+              disabled={!this.state.reviewMode}
             />
           </Form.Group>
           <Form.Group inline={true}>
@@ -145,6 +159,8 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               className="cleanlinessRating"
               maxRating={5}
               onRate={this.handleRate}
+              rating={this.state.reviewMode ? this.state.cleanlinessRating : cleanlinessRating}
+              disabled={!this.state.reviewMode}
             />
           </Form.Group>
           <Form.Group inline={true}>
@@ -154,19 +170,25 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               className="quietnessRating"
               maxRating={5}
               onRate={this.handleRate}
+              rating={this.state.reviewMode ? this.state.quietnessRating : quietnessRating}
+              disabled={!this.state.reviewMode}
             />
           </Form.Group>
-          <div className="form-buttons">
-            <Form.Button className="positive submit" onClick={this.submitReview}>
-              Submit
-            </Form.Button>
+            {this.state.reviewMode ? (
+                <Form.Button className="positive submit" onClick={this.submitReview}>
+                  Submit
+                </Form.Button>
+              ) : (
+                <Form.Button className="submit" onClick={() => this.setState({reviewMode: true})}>
+                  Review
+                </Form.Button>
+              )
+              
+            }
             {/* TODO: Make this actually "go back" rather than forward to home */}
-            <Link to="/app/review" className="back">
-              <Form.Button>
-                Back
-              </Form.Button>
-            </Link>
-          </div>
+            <Form.Button className="back" onClick={() => this.context.router.history.goBack()}>
+              Back
+            </Form.Button>
         </Form>
       </Segment>
     );
