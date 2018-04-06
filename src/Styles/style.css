@@ -54,4 +54,22 @@ body {
   background-color: #ddd !important;
   color: #555 !important; }
 
+.toilet-button-container .toilet-button-bumper i {
+  font-size: 1.5em;
+  line-height: 0.75em; }
+.toilet-button-container .toilet-button {
+  flex-shrink: 1 !important; }
+  .toilet-button-container .toilet-button .address {
+    padding-bottom: 0.4em; }
+
+.minor-section {
+  padding-bottom: 1em; }
+  .minor-section .col {
+    margin-right: 1em; }
+
+.form-buttons .submit {
+  display: inline-block; }
+.form-buttons .back {
+  display: inline-block; }
+
 /*# sourceMappingURL=style.css.map */

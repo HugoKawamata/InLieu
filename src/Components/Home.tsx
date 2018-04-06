@@ -1,3 +1,4 @@
+/*global google*/
 import * as React from "react";
 import * as firebase from "firebase";
 import { Button } from "semantic-ui-react";

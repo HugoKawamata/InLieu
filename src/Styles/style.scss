@@ -85,3 +85,36 @@ body {
   background-color: $inactive-tab-bg !important;
   color: $inactive-tab-icon !important;
 }
+
+.toilet-button-container {
+  .toilet-button-bumper {
+    i {
+      font-size: 1.5em;
+      line-height: 0.75em;
+    }
+  }
+  .toilet-button {
+    flex-shrink: 1 !important;
+
+    .address {
+      padding-bottom: 0.4em;
+    }
+  }
+}
+
+.minor-section {
+  padding-bottom: 1em;
+
+  .col {
+    margin-right: 1em;
+  }
+}
+
+.form-buttons {
+  .submit {
+    display: inline-block;
+  }
+  .back {
+    display: inline-block;
+  }
+}

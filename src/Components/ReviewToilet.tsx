@@ -1,7 +1,7 @@
 /*global google*/
 import * as React from "react";
 import * as PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import * as firebase from "firebase";
 import { Header, Form, Rating, Segment, Input, Button, Icon } from "semantic-ui-react";
 
@@ -14,6 +14,7 @@ interface State {
   cleanlinessRating: number;
   quietnessRating: number;
   toilet: object;
+  submitted: boolean;
 }
 
 export default class ReviewToilet extends React.PureComponent<Props, State> {
@@ -28,7 +29,8 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
       aestheticRating: -1,
       cleanlinessRating: -1,
       quietnessRating: -1,
-      toilet: {}
+      toilet: {},
+      submitted: false
     }
   }
 
@@ -81,17 +83,24 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
       console.log(data);
       
       let toiletID = this.context.router.route.location.pathname.slice(19);
-      this.props.fdb.ref("toilets").child(toiletID).update(data)
+      this.props.fdb.ref("toilets").child(toiletID).update(data);
+      this.setState({submitted: true})
     }
   }
 
+
   render() {
+    if (this.state.submitted) {
+      return <Redirect to="/app/review" />
+    }    
+
+
     const sexIcon = this.state.toilet["sex"] === "m" ? "male" : this.state.toilet["sex"] === "f" ? "female" : "intergender";
     const floorInfo = this.state.toilet["multistorey"] === 1 ? 
       (
-        <div>
+        <span className="col">
           Floor: {this.state.toilet["floor"]}
-        </div>
+        </span>
       ) :
       <div/>;
     return (
@@ -99,14 +108,25 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
         <Header>
           {this.state.toilet["address"]}
         </Header>
-        <div>
+        <div className="minor-section">
+          <span className="col">
             <Icon name={sexIcon} />
-            {this.state.toilet["accessible"] === 1 ? <Icon name="handicap" /> : ""}
-            {this.state.toilet["paperTowels"] === 1 ? <Icon name="sticky note outline"/> : ""}
+            {sexIcon === "male" ? "Male" : sexIcon === "female" ? "Female" : "Unisex"}
+          </span>
+          {this.state.toilet["accessible"] === 1 ? 
+            <span className="col">
+              <Icon name="handicap" /> Wheelchair Access
+            </span> : ""}
+          {this.state.toilet["paperTowels"] === 1 ?
+            <span className="col">
+              <Icon name="sticky note outline"/> Paper Towels
+            </span> : ""}
         </div>
-        {floorInfo}
-        <div>
-          Stalls: {this.state.toilet["numStalls"]}
+        <div className="minor-section">
+          <span className="col">
+            Stalls: {this.state.toilet["numStalls"]}
+          </span>
+          {floorInfo}
         </div>
         <Form>
           <Form.Group inline={true}>
@@ -136,15 +156,17 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               onRate={this.handleRate}
             />
           </Form.Group>
-          <Form.Button className="positive" onClick={this.submitReview}>
-            Submit
-          </Form.Button>
-          {/* TODO: Make this actually "go back" rather than forward to home */}
-          <Link to="/app/review">
-            <Form.Button>
-              Back
+          <div className="form-buttons">
+            <Form.Button className="positive submit" onClick={this.submitReview}>
+              Submit
             </Form.Button>
-          </Link>
+            {/* TODO: Make this actually "go back" rather than forward to home */}
+            <Link to="/app/review" className="back">
+              <Form.Button>
+                Back
+              </Form.Button>
+            </Link>
+          </div>
         </Form>
       </Segment>
     );

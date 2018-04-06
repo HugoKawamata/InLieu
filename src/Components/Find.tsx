@@ -4,6 +4,7 @@ import * as firebase from "firebase";
 import { withProps, compose } from "recompose";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { Segment, Input, Button, Loader } from "semantic-ui-react";
+import { Redirect } from "react-router-dom";
 
 import fbi from "../FirebaseInstance";
 
@@ -16,6 +17,7 @@ interface State {
   lat: number;
   lng: number;
   markers: JSX.Element[];
+  markerClicked: string;
   // I'm aware this is an anti-pattern
   mounted: boolean;
 }
@@ -35,6 +37,7 @@ const LoadingMap = () =>
     </div>
   );
 
+
 export default class Find extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -42,9 +45,18 @@ export default class Find extends React.Component<Props, State> {
       lat: 0,
       lng: 0,
       mounted: false,
+      markerClicked: "",
       markers: this.props.toilets.map((toilet) => 
-        <Marker key={toilet["key"]} position={{ lat: toilet["data"]["lat"], lng: toilet["data"]["lng"] }} />)
+        <Marker key={toilet["key"]}
+                position={{ lat: toilet["data"]["lat"], lng: toilet["data"]["lng"] }}
+                clickable={true}
+                onClick={() => this.clickMarker(toilet["key"])} />)
     };
+  }
+
+
+  clickMarker(toiletKey: string) {
+    this.setState({markerClicked: toiletKey});
   }
 
   componentDidMount() {
@@ -74,12 +86,16 @@ export default class Find extends React.Component<Props, State> {
     <GoogleMap
       defaultZoom={15} // Or 16. The larger the number, the more zoomed in
       defaultCenter={{ lat: this.state.lat, lng: this.state.lng }}
+      center={{ lat: this.state.lat, lng: this.state.lng }}
     >
       {this.state.markers}
     </GoogleMap>
   ));
 
   render() {
+    if (this.state.markerClicked !== "") {
+      return <Redirect to={"/app/review/toilet/"+this.state.markerClicked} />
+    }
     return (
       <Segment attached="bottom" className="find">
         <div className="map">

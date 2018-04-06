@@ -17,10 +17,10 @@ const ToiletButton = (props: {id: string, address: string, sex: string, aestheti
   const sexIcon = props.sex === "m" ? "male" : props.sex === "f" ? "female" : "intergender";
   return (
     <Link to={"/app/review/toilet/" + props.id}>
-      <Button.Group fluid={true} color={color}>
-        <Button icon={sexIcon} />
+      <Button.Group fluid={true} color={color} className="toilet-button-container">
+        <Button icon={sexIcon} className="toilet-button-bumper" />
         <Button color={color} basic={true} className="toilet-button">
-          <div>
+          <div className="address">
             {props.address}
           </div>
           <div>
@@ -36,7 +36,7 @@ const ToiletButton = (props: {id: string, address: string, sex: string, aestheti
             <Rating rating={props.quietness + 0.5} maxRating={5} disabled={true}/>
           </div>
         </Button>
-        <Button icon="right chevron" />
+        <Button icon="right chevron" className="toilet-button-bumper" />
       </Button.Group>
     </Link>
 
