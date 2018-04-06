@@ -81,7 +81,7 @@ export default class AddToilet extends React.Component<Props, State> {
       numStalls: this.state.numStalls,
       paperTowels: this.state.paperTowels,
       sex: this.state.sex,
-      mutlistorey: this.state.multistorey,
+      multistorey: this.state.multistorey,
       floor: this.state.floor,
       numberOfReviews: 1
     };

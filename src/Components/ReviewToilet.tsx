@@ -3,7 +3,7 @@ import * as React from "react";
 import * as PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import * as firebase from "firebase";
-import { Header, Form, Rating, Segment, Input, Button } from "semantic-ui-react";
+import { Header, Form, Rating, Segment, Input, Button, Icon } from "semantic-ui-react";
 
 interface Props {
   fdb: firebase.database.Database;
@@ -86,11 +86,28 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
   }
 
   render() {
+    const sexIcon = this.state.toilet["sex"] === "m" ? "male" : this.state.toilet["sex"] === "f" ? "female" : "intergender";
+    const floorInfo = this.state.toilet["multistorey"] === 1 ? 
+      (
+        <div>
+          Floor: {this.state.toilet["floor"]}
+        </div>
+      ) :
+      <div/>;
     return (
       <Segment attached="bottom" className="review-toilet">
         <Header>
           {this.state.toilet["address"]}
         </Header>
+        <div>
+            <Icon name={sexIcon} />
+            {this.state.toilet["accessible"] === 1 ? <Icon name="handicap" /> : ""}
+            {this.state.toilet["paperTowels"] === 1 ? <Icon name="sticky note outline"/> : ""}
+        </div>
+        {floorInfo}
+        <div>
+          Stalls: {this.state.toilet["numStalls"]}
+        </div>
         <Form>
           <Form.Group inline={true}>
             <label>Aesthetic: </label>
@@ -119,9 +136,15 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               onRate={this.handleRate}
             />
           </Form.Group>
-          <Form.Button onClick={this.submitReview}>
+          <Form.Button className="positive" onClick={this.submitReview}>
             Submit
           </Form.Button>
+          {/* TODO: Make this actually "go back" rather than forward to home */}
+          <Link to="/app/review">
+            <Form.Button>
+              Back
+            </Form.Button>
+          </Link>
         </Form>
       </Segment>
     );

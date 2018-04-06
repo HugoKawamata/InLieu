@@ -5,6 +5,13 @@ $body-bg: #ddd;
 $inactive-tab-bg: $body-bg;
 $inactive-tab-icon: #555;
 
+$positive: #56E2D9;
+$positive-light: #5FFCF2;
+$alt: #CF9893;
+$light1: #E0D3DE;
+$light2: #D8D0C1;
+$dark: #292F36;
+
 .input, .ui.buttons {
   margin-top: $usual-top-pad;
   margin-bottom: $usual-bottom-pad;
@@ -26,6 +33,16 @@ body {
 
 .segment {
   flex: 1 1 auto;
+}
+
+.positive {
+  .ui.button {
+    background-color: $positive;
+
+    &:hover {
+      background-color: $positive-light;
+    }
+  }
 }
 
 .loginPage {

@@ -16,6 +16,11 @@ body {
 .segment {
   flex: 1 1 auto; }
 
+.positive .ui.button {
+  background-color: #56E2D9; }
+  .positive .ui.button:hover {
+    background-color: #5FFCF2; }
+
 .loginPage {
   padding: 2em !important;
   margin: 0px 20px 20vh 20px !important; }

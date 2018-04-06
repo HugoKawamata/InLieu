@@ -25,15 +25,15 @@ const ToiletButton = (props: {id: string, address: string, sex: string, aestheti
           </div>
           <div>
             <Icon name="unhide" />
-            <Rating rating={props.aesthetic} maxRating={5} disabled={true}/>
+            <Rating rating={props.aesthetic + 0.5} maxRating={5} disabled={true}/>
           </div>
           <div>
             <Icon name="diamond" />
-            <Rating rating={props.cleanliness} maxRating={5} disabled={true}/>
+            <Rating rating={props.cleanliness + 0.5} maxRating={5} disabled={true}/>
           </div>
           <div>
             <Icon name="spy" />
-            <Rating rating={props.quietness} maxRating={5} disabled={true}/>
+            <Rating rating={props.quietness + 0.5} maxRating={5} disabled={true}/>
           </div>
         </Button>
         <Button icon="right chevron" />
