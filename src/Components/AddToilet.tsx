@@ -26,6 +26,7 @@ interface State {
   submitted: boolean;
   multistorey: number;
   floor: number;
+  description: string;
   failedSubmission: boolean;
 }
 
@@ -50,6 +51,7 @@ export default class AddToilet extends React.Component<Props, State> {
       submitted: false,
       multistorey: -1,
       floor: 1,
+      description: "",
       failedSubmission: false
     };
 
@@ -83,6 +85,7 @@ export default class AddToilet extends React.Component<Props, State> {
       sex: this.state.sex,
       multistorey: this.state.multistorey,
       floor: this.state.floor,
+      description: this.state.description,
       numberOfReviews: 1
     };
     this.props.fdb.ref("toilets").push().set(data);
@@ -477,6 +480,14 @@ export default class AddToilet extends React.Component<Props, State> {
               onChange={this.handleChange}
             />
           </Form.Group>
+
+          <Form.Input
+            label="Description (optional)"
+            name="description"
+            value={this.state.description}
+            onChange={this.handleChange}
+          />
+
           <Form.Button
             onClick={this.submitToilet}
           >

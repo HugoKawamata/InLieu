@@ -66,6 +66,16 @@ export default class Review extends React.Component<Props, State> {
     }
   }
 
+  compare(a: object, b: object) {
+    if (a["distance"] < b["distance"]) {
+      return -1;
+    } else if (a["distance"] > b["distance"]) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
   render() {
     let nearbyToilets = [];
     let userCoords = [this.props.lat, this.props.lng];
@@ -78,6 +88,10 @@ export default class Review extends React.Component<Props, State> {
         nearbyToilets.push(this.props.toilets[i])
       }
     }
+
+    // Sort nearbyToilets by proximity
+    nearbyToilets.sort(this.compare)
+
     const toiletButtons = nearbyToilets.map((toilet) => (
       <ToiletButton
         key={toilet["key"]}

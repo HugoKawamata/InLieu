@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Route } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import "./App.css";
 
 import firebase from "./FirebaseInstance";
@@ -14,7 +14,8 @@ import ReviewToilet from "./Components/ReviewToilet";
 let database = firebase.database();
 
 const FBHome = () => {
-  return <Home fdb={database} />;
+  return <Redirect to="/app/find"/>
+  //return <Home fdb={database} />;
 };
 
 const FBFind = (toilets: Object[], lat: number, lng: number) => {

@@ -108,9 +108,12 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
       ) :
       <div/>;
     return (
-      <Segment attached="bottom" className="review-toilet">
-        <Header>
+      <Segment attached="bottom" className={"review-toilet " + this.state.reviewMode ? "review-mode" : ""}>
+        <Header as="h2">
           {this.state.toilet["address"]}
+        </Header>
+        <Header as="h4">
+          {this.state.toilet["description"]}
         </Header>
         <div className="minor-section">
           <span className="col">

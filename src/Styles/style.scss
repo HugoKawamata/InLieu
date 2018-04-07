@@ -114,3 +114,14 @@ body {
 .inline-button {
   display: inline-block;
 }
+
+.review-toilet {
+  h4 {
+    margin-top:20px !important;
+  }
+
+  &.review-mode {
+    color: #eee;
+    background-color: #333;
+  }
+}
