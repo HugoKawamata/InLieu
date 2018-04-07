@@ -74,10 +74,6 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
       let avgCleanliness = (this.state.cleanlinessRating + (this.state.toilet["criteria"]["cleanliness"]["rating"] * this.state.toilet["numberOfReviews"])) / (this.state.toilet["numberOfReviews"] + 1);
       let avgQuietness = (this.state.quietnessRating + (this.state.toilet["criteria"]["quietness"]["rating"] * this.state.toilet["numberOfReviews"])) / (this.state.toilet["numberOfReviews"] + 1);
 
-      console.log("this.state.aestheticRating: " + this.state.aestheticRating);
-      console.log("this.state.toilet...rating: " + this.state.toilet["criteria"]["aesthetic"]["rating"]);
-      console.log("avgAesthetic: " + avgAesthetic);
-
       let data = {
         criteria: {
           aesthetic: {rating: avgAesthetic},
@@ -86,8 +82,6 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
         },
         numberOfReviews: this.state.toilet["numberOfReviews"] + 1
       }
-
-      console.log(data);
       
       let toiletID = this.context.router.route.location.pathname.slice(19);
       this.props.fdb.ref("toilets").child(toiletID).update(data);
@@ -104,8 +98,6 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
     const aestheticRating = Object.keys(this.state.toilet).length === 0 ? 0 : this.state.toilet["criteria"]["aesthetic"]["rating"];
     const cleanlinessRating = Object.keys(this.state.toilet).length === 0 ? 0 : this.state.toilet["criteria"]["cleanliness"]["rating"];
     const quietnessRating = Object.keys(this.state.toilet).length === 0 ? 0 : this.state.toilet["criteria"]["quietness"]["rating"];
-
-    console.log(this.state);
 
     const sexIcon = this.state.toilet["sex"] === "m" ? "male" : this.state.toilet["sex"] === "f" ? "female" : "intergender";
     const floorInfo = this.state.toilet["multistorey"] === 1 ? 
@@ -148,7 +140,7 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               className="aestheticRating"
               maxRating={5}
               onRate={this.handleRate}
-              rating={this.state.reviewMode ? this.state.aestheticRating : aestheticRating}
+              rating={this.state.reviewMode ? this.state.aestheticRating : aestheticRating+0.5}
               disabled={!this.state.reviewMode}
             />
           </Form.Group>
@@ -159,7 +151,7 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               className="cleanlinessRating"
               maxRating={5}
               onRate={this.handleRate}
-              rating={this.state.reviewMode ? this.state.cleanlinessRating : cleanlinessRating}
+              rating={this.state.reviewMode ? this.state.cleanlinessRating : cleanlinessRating+0.5}
               disabled={!this.state.reviewMode}
             />
           </Form.Group>
@@ -170,7 +162,7 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               className="quietnessRating"
               maxRating={5}
               onRate={this.handleRate}
-              rating={this.state.reviewMode ? this.state.quietnessRating : quietnessRating}
+              rating={this.state.reviewMode ? this.state.quietnessRating : quietnessRating+0.5}
               disabled={!this.state.reviewMode}
             />
           </Form.Group>

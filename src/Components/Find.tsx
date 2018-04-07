@@ -93,6 +93,7 @@ export default class Find extends React.Component<Props, State> {
   ));
 
   render() {
+    console.log(this.state.lat + ", " + this.state.lng);
     if (this.state.markerClicked !== "") {
       return <Redirect to={"/app/review/toilet/"+this.state.markerClicked} />
     }
