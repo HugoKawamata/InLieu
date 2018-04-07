@@ -16,7 +16,7 @@ class Home extends React.Component<HomeProps, State> {
     return (
       <div className="App">
         <div className="App-header">
-          <h2>Welcome to InLieu</h2>
+          <h2>Welcome to InLoo</h2>
         </div>
         <p className="App-intro">
           <Link to="/login">

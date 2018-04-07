@@ -61,21 +61,6 @@ export default class Find extends React.Component<Props, State> {
     this.setState({markerClicked: toiletKey});
   }
 
-  /*
-  componentDidMount() {
-    this.setState({mounted: true});
-    navigator.geolocation.getCurrentPosition((pos) => {
-      if (this.state.mounted) {
-        this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.setState({mounted: false});
-  }
-  */
-
   MapComponent = compose(
     withProps({
       googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry," +
@@ -97,7 +82,6 @@ export default class Find extends React.Component<Props, State> {
   ));
 
   render() {
-    console.log(this.state.lat + ", " + this.state.lng);
     if (this.state.markerClicked !== "") {
       return <Redirect to={"/app/review/toilet/"+this.state.markerClicked} />
     }

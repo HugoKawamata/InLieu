@@ -72,6 +72,8 @@ class App extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    document.title = "InLoo"
+
     // Sets state.markers to be a list of all approved markers in the entire database
     database.ref("toilets").on("value", (toiletsRef) => {
       let newToilets = [];

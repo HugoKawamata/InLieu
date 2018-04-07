@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as firebase from "firebase";
-import { Segment, Input, Button, Icon, Rating } from "semantic-ui-react";
+import { Segment, Input, Button, Icon, Rating, Loader } from "semantic-ui-react";
 import StandaloneSearchBox from "react-google-maps/lib/components/places/StandaloneSearchBox";
 
 interface Props {
@@ -49,6 +49,13 @@ const ToiletButton = (props: {id: string, address: string, sex: string, aestheti
   );
 };
 
+const LoadingToilets = () => 
+  (
+    <div className="ninety-flexbox">
+      <Loader active={true} inline="centered" />
+    </div>
+  );
+
 export default class Review extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -59,22 +66,6 @@ export default class Review extends React.Component<Props, State> {
     }
   }
 
-  /*
-  componentDidMount() {
-    this.setState({mounted: true});
-    // Using mounted in the state because of async call in componentDidMount
-    navigator.geolocation.getCurrentPosition((pos) => {
-      if (this.state.mounted) {
-        this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.setState({mounted: false});
-  }
-  */
-
   render() {
     let nearbyToilets = [];
     let userCoords = [this.props.lat, this.props.lng];
@@ -82,12 +73,11 @@ export default class Review extends React.Component<Props, State> {
       let toiletCoords = [this.props.toilets[i]["data"]["lat"], this.props.toilets[i]["data"]["lng"]];
       let hypotenuse = Math.sqrt(Math.pow(userCoords[0] - toiletCoords[0], 2) + Math.pow(userCoords[1] - toiletCoords[1], 2))
       if (hypotenuse < 0.005) {
+        let toiletWithDistance = this.props.toilets[i];
+        toiletWithDistance["distance"] = hypotenuse;
         nearbyToilets.push(this.props.toilets[i])
       }
     }
-    console.log(nearbyToilets);
-    console.log(userCoords);
-    console.log(this.props.lat + ", " + this.props.lng);
     const toiletButtons = nearbyToilets.map((toilet) => (
       <ToiletButton
         key={toilet["key"]}
@@ -102,14 +92,16 @@ export default class Review extends React.Component<Props, State> {
 
     return (
       <Segment attached="bottom" className="review">
-        <Link to="/app/review/addtoilet">
-          <Button className="new-toilet-button" color="yellow">
-            Add New Toilet
-          </Button>
-        </Link>
-        {(this.props.lat !== 0 && this.props.lng !== 0) ?
-        toiletButtons :
-        "loading"}
+        {(this.props.lat !== 0 && this.props.lng !== 0) ? 
+          <div>
+            {toiletButtons}
+            <Link to="/app/review/addtoilet">
+              <Button className="new-toilet-button">
+                Add New Toilet
+              </Button>
+            </Link>
+          </div> :
+        <LoadingToilets />}
       </Segment>
     );
   }
