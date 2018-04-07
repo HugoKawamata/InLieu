@@ -2,7 +2,7 @@
 import * as React from "react";
 import * as firebase from "firebase";
 import { withProps, compose } from "recompose";
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Circle } from "react-google-maps";
 import { Segment, Input, Button, Loader } from "semantic-ui-react";
 import { Redirect } from "react-router-dom";
 
@@ -78,6 +78,17 @@ export default class Find extends React.Component<Props, State> {
       center={{ lat: this.props.lat, lng: this.props.lng }}
     >
       {this.state.markers}
+      <Marker position={{ lat: this.props.lat, lng: this.props.lng }}
+              icon={{
+                path: google.maps.SymbolPath.CIRCLE,
+                fillColor: "#437AF8",
+                fillOpacity: 0.8,
+                scale: 1,
+                strokeColor: "#dddddd",
+                strokeOpacity: 0.9,
+                strokeWeight: 5
+              }}
+      />
     </GoogleMap>
   ));
 

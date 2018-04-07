@@ -96,7 +96,6 @@ class App extends React.Component<Props, State> {
     this.setState({mounted: true});
     navigator.geolocation.getCurrentPosition((pos) => {
       if (this.state.mounted) {
-        console.log("app got latlng")
         this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
       }
     });
