@@ -17,19 +17,23 @@ const FBHome = () => {
   return <Home fdb={database} />;
 };
 
-const FBFind = (toilets: Object[]) => {
+const FBFind = (toilets: Object[], lat: number, lng: number) => {
   return (
     <Find 
       fdb={database}
       toilets={toilets}
+      lat={lat}
+      lng={lng}
     />);
 };
 
-const FBReview = (toilets: Object[]) => {
+const FBReview = (toilets: Object[], lat: number, lng: number) => {
   return (
     <Review
       fdb={database}
       toilets={toilets}
+      lat={lat}
+      lng={lng}
     />
   );
 };
@@ -50,6 +54,9 @@ interface Props {}
 interface State {
   activeIcon: string;
   toilets: Object[];
+  mounted: boolean;
+  lat: number;
+  lng: number;
 }
 
 class App extends React.Component<Props, State> {
@@ -57,7 +64,10 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       activeIcon: "find",
-      toilets: []
+      toilets: [],
+      mounted: false,
+      lat:0,
+      lng:0
     };
   }
 
@@ -78,9 +88,19 @@ class App extends React.Component<Props, State> {
       }
       this.setState({toilets: newToilets});
     });
+
+    // Get user coordinates
+    this.setState({mounted: true});
+    navigator.geolocation.getCurrentPosition((pos) => {
+      if (this.state.mounted) {
+        console.log("app got latlng")
+        this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
+      }
+    });
   }
 
   componentWillUnmount() {
+    this.setState({mounted: false});
     database.ref("toilets").off();
   }
 
@@ -90,8 +110,8 @@ class App extends React.Component<Props, State> {
         <Route path="/app" component={MobNavBar} />
         <Route exact={true} path="/" component={FBHome} />
         <Route exact={true} path="/login" component={Login} />
-        <Route exact={true} path="/app/find" component={() => FBFind(this.state.toilets)} />
-        <Route exact={true} path="/app/review" component={() => FBReview(this.state.toilets)} />
+        <Route exact={true} path="/app/find" component={() => FBFind(this.state.toilets, this.state.lat, this.state.lng)} />
+        <Route exact={true} path="/app/review" component={() => FBReview(this.state.toilets, this.state.lat, this.state.lng)} />
         <Route exact={true} path="/app/review/addtoilet" component={FBAddToilet} />
         <Route exact={true} path="/app/review/toilet/:toiletID" component={FBReviewToilet} />
       </div>

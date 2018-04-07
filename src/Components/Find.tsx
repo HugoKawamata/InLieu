@@ -11,6 +11,8 @@ import fbi from "../FirebaseInstance";
 interface Props {
   fdb: firebase.database.Database;
   toilets: Object[];
+  lat: number;
+  lng: number;
 }
 
 interface State {
@@ -59,6 +61,7 @@ export default class Find extends React.Component<Props, State> {
     this.setState({markerClicked: toiletKey});
   }
 
+  /*
   componentDidMount() {
     this.setState({mounted: true});
     navigator.geolocation.getCurrentPosition((pos) => {
@@ -71,6 +74,7 @@ export default class Find extends React.Component<Props, State> {
   componentWillUnmount() {
     this.setState({mounted: false});
   }
+  */
 
   MapComponent = compose(
     withProps({
@@ -85,8 +89,8 @@ export default class Find extends React.Component<Props, State> {
   )((props) => (
     <GoogleMap
       defaultZoom={15} // Or 16. The larger the number, the more zoomed in
-      defaultCenter={{ lat: this.state.lat, lng: this.state.lng }}
-      center={{ lat: this.state.lat, lng: this.state.lng }}
+      defaultCenter={{ lat: this.props.lat, lng: this.props.lng }}
+      center={{ lat: this.props.lat, lng: this.props.lng }}
     >
       {this.state.markers}
     </GoogleMap>
@@ -101,7 +105,7 @@ export default class Find extends React.Component<Props, State> {
       <Segment attached="bottom" className="find">
         <div className="map">
           {/* If the state hasn't been set yet, render the loading map */}
-          {(this.state.lat !== 0 && this.state.lng !== 0 && this.state.markers.length !== 0) ?
+          {(this.props.lat !== 0 && this.props.lng !== 0 && this.state.markers.length !== 0) ?
             <this.MapComponent/> :
             <LoadingMap />}
         </div>

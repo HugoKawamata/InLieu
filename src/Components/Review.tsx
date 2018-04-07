@@ -8,6 +8,8 @@ import StandaloneSearchBox from "react-google-maps/lib/components/places/Standal
 interface Props {
   fdb: firebase.database.Database;
   toilets: Object[];
+  lat: number;
+  lng: number;
 }
 
 interface State {
@@ -57,23 +59,25 @@ export default class Review extends React.Component<Props, State> {
     }
   }
 
+  /*
   componentDidMount() {
-    //this.setState({mounted: true});
+    this.setState({mounted: true});
     // Using mounted in the state because of async call in componentDidMount
     navigator.geolocation.getCurrentPosition((pos) => {
-      //if (this.state.mounted) {
+      if (this.state.mounted) {
         this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
-      //}
+      }
     });
   }
 
   componentWillUnmount() {
     this.setState({mounted: false});
   }
+  */
 
   render() {
     let nearbyToilets = [];
-    let userCoords = [this.state.lat, this.state.lng];
+    let userCoords = [this.props.lat, this.props.lng];
     for (let i = 0; i < this.props.toilets.length; i++) {
       let toiletCoords = [this.props.toilets[i]["data"]["lat"], this.props.toilets[i]["data"]["lng"]];
       let hypotenuse = Math.sqrt(Math.pow(userCoords[0] - toiletCoords[0], 2) + Math.pow(userCoords[1] - toiletCoords[1], 2))
@@ -83,7 +87,7 @@ export default class Review extends React.Component<Props, State> {
     }
     console.log(nearbyToilets);
     console.log(userCoords);
-    console.log(this.state.lat + ", " + this.state.lng);
+    console.log(this.props.lat + ", " + this.props.lng);
     const toiletButtons = nearbyToilets.map((toilet) => (
       <ToiletButton
         key={toilet["key"]}
@@ -103,7 +107,7 @@ export default class Review extends React.Component<Props, State> {
             Add New Toilet
           </Button>
         </Link>
-        {(this.state.lat !== 0 && this.state.lng !== 0) ?
+        {(this.props.lat !== 0 && this.props.lng !== 0) ?
         toiletButtons :
         "loading"}
       </Segment>
