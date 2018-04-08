@@ -16,6 +16,7 @@ interface State {
   lat: number;
   lng: number;
   mounted: boolean;
+  nearbyToilets: Object[];
 }
 
 const ToiletButton = (props: {id: string, address: string, sex: string, aesthetic: number, cleanliness: number, quietness: number}) => {
@@ -62,7 +63,8 @@ export default class Review extends React.Component<Props, State> {
     this.state = {
       lat: 0,
       lng: 0,
-      mounted: false
+      mounted: false,
+      nearbyToilets: []
     }
   }
 
@@ -77,15 +79,18 @@ export default class Review extends React.Component<Props, State> {
   }
 
   render() {
+    console.log("render review")
     let nearbyToilets = [];
     let userCoords = [this.props.lat, this.props.lng];
     for (let i = 0; i < this.props.toilets.length; i++) {
       let toiletCoords = [this.props.toilets[i]["data"]["lat"], this.props.toilets[i]["data"]["lng"]];
       let hypotenuse = Math.sqrt(Math.pow(userCoords[0] - toiletCoords[0], 2) + Math.pow(userCoords[1] - toiletCoords[1], 2))
-      if (hypotenuse < 0.005) {
+      if (hypotenuse < 0.01) {
         let toiletWithDistance = this.props.toilets[i];
         toiletWithDistance["distance"] = hypotenuse;
         nearbyToilets.push(this.props.toilets[i])
+      } else {
+        console.log("nahh too far away fuck you. toilet: " + this.props.toilets[i]["data"]["address"]);
       }
     }
 
@@ -103,6 +108,8 @@ export default class Review extends React.Component<Props, State> {
         quietness={toilet["data"]["criteria"]["quietness"]["rating"]}
       />
     ));
+
+    console.log(this.props.lat + ", " + this.props.lng);
 
     return (
       <Segment attached="bottom" className="review">

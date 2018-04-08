@@ -14,8 +14,7 @@ import ReviewToilet from "./Components/ReviewToilet";
 let database = firebase.database();
 
 const FBHome = () => {
-  return <Redirect to="/app/find"/>
-  //return <Home fdb={database} />;
+  return <Home fdb={database} />;
 };
 
 const FBFind = (toilets: Object[], lat: number, lng: number) => {
@@ -95,6 +94,9 @@ class App extends React.Component<Props, State> {
     // Get user coordinates
     this.setState({mounted: true});
     navigator.geolocation.getCurrentPosition((pos) => {
+      console.log("got the coords");
+      console.log( pos.coords.latitude + ", " + pos.coords.longitude );
+
       if (this.state.mounted) {
         this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
       }
