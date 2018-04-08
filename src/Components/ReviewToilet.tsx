@@ -169,7 +169,7 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
               disabled={!this.state.reviewMode}
             />
           </Form.Group>
-            {this.state.reviewMode && firebase.auth().currentUser != null ? (
+            {this.state.reviewMode ? (
                 <Form.Button className="positive inline-button" onClick={this.submitReview}>
                   Submit
                 </Form.Button>
