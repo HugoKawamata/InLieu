@@ -78,17 +78,11 @@ export default class Find extends React.Component<Props, State> {
       center={{ lat: this.props.lat, lng: this.props.lng }}
     >
       {this.state.markers}
+      {/* User position. It's not rendering the correct icon atm, so this feature is on hold for a sec
       <Marker position={{ lat: this.props.lat, lng: this.props.lng }}
-              icon={{
-                path: google.maps.SymbolPath.CIRCLE,
-                fillColor: "#437AF8",
-                fillOpacity: 0.8,
-                scale: 1,
-                strokeColor: "#dddddd",
-                strokeOpacity: 0.9,
-                strokeWeight: 5
-              }}
-      />
+              //icon="https://github.com/HugoKawamata/InLieu/blob/master/public/googleUserlocationIcon.png"
+              //icon="https://lh4.googleusercontent.com/-ywzFYtSAbqQ/AAAAAAAAAAI/AAAAAAAADNg/YX7JdEcU81I/photo.jpg?sz=64"
+      />*/}
     </GoogleMap>
   ));
 

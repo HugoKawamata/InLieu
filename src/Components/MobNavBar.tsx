@@ -12,7 +12,36 @@ interface Props extends RouteComponentProps<URLParameters> {
 interface State { }
 
 export default class MobNavBar extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {user: null};
+  }
+
+  componentDidMount() {
+    this.setState({user: firebase.auth().currentUser});
+  }
+
   render() {
+    const logInOutTab = firebase.auth().currentUser == null ? (
+        <Link to="/login">
+          <Menu.Item name="login">
+            Login
+          </Menu.Item>
+        </Link>
+    ) : (
+        <a onClick={
+          () => firebase.auth().signOut().then( () => {
+              location.reload();
+            }, (error) => {
+              console.log(error);
+            } )
+          }>
+          <Menu.Item name="logout">
+            Logout
+          </Menu.Item>
+        </a>
+    )
+
     return (
       <Menu attached="top" className="mobnavbar" tabular={true}>
         <Link to="/app/find">
@@ -25,6 +54,7 @@ export default class MobNavBar extends React.Component<Props, State> {
             Review
           </Menu.Item>
         </Link>
+        { logInOutTab }
         {/*
         <Link to="/app/settings">
           <Menu.Item name="settings" active={this.props.location.pathname === "/app/settings"}>

@@ -82,6 +82,7 @@ export default class Login extends React.Component<Props, State> {
               <Input
                 value={this.state.formPassword}
                 label="Password"
+                type="password"
                 onChange={this.propertyHandler("formPassword")}
               />
             </div>

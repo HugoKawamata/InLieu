@@ -109,11 +109,13 @@ export default class Review extends React.Component<Props, State> {
         {(this.props.lat !== 0 && this.props.lng !== 0) ? 
           <div>
             {toiletButtons}
-            <Link to="/app/review/addtoilet">
-              <Button className="new-toilet-button">
-                Add New Toilet
-              </Button>
-            </Link>
+            { firebase.auth().currentUser != null ? (
+              <Link to="/app/review/addtoilet">
+                <Button className="new-toilet-button">
+                  Add New Toilet
+                </Button>
+              </Link>
+            ) : ""}
           </div> :
         <LoadingToilets />}
       </Segment>
