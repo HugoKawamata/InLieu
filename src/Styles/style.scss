@@ -1,7 +1,7 @@
 $usual-top-pad: 0.3rem;
 $usual-bottom-pad: 0.7rem;
 
-$body-bg: #ddd;
+$body-bg: #222;
 $inactive-tab-bg: $body-bg;
 $inactive-tab-icon: #555;
 
@@ -29,6 +29,15 @@ body {
 
 .mobnavbar {
   flex: 0 1 auto;
+  margin-top: 5px !important;
+
+  .item {
+    height: 102%;
+
+    &:not(.active) {
+      color: #bbb !important;
+    }
+  }
 }
 
 .segment {
@@ -123,5 +132,21 @@ body {
   &.review-mode {
     color: #eee;
     background-color: #333;
+  }
+}
+
+.landing-container {
+  background-color: #222;
+  flex-direction: column;
+  color: #eee;
+  padding-bottom: 50%;
+
+  h4 {
+    margin-top: 0;
+  }
+
+  .landing-logo {
+    width: 100px;
+    padding-bottom: 50px;
   }
 }

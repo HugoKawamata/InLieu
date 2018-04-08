@@ -14,15 +14,13 @@ interface State { }
 class Home extends React.Component<HomeProps, State> {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Welcome to InLoo</h2>
-        </div>
-        <p className="App-intro">
-          <Link to="/login">
-            <Button className="button">Login</Button>
-          </Link>
-        </p>
+      <div className="landing-container fullheight-flexbox">
+        <h1>InLoo</h1>
+        <h4>Find the perfect toilet near you.</h4>
+        <img src="InLieuLogoWhite.png" className="landing-logo" />
+        <Link to="/login">
+          <Button className="button">Login</Button>
+        </Link>
       </div>
     );
   }
