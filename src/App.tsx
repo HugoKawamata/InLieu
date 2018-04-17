@@ -38,9 +38,13 @@ const FBReview = (toilets: Object[], lat: number, lng: number) => {
   );
 };
 
-const FBAddToilet = () => {
+const FBAddToilet = (lat: number, lng: number) => {
   return (
-    <AddToilet fdb={database} />
+    <AddToilet
+      fdb={database}
+      lat={lat}
+      lng={lng}
+    />
   );
 };
 
@@ -122,7 +126,7 @@ class App extends React.Component<Props, State> {
         <Route exact={true} path="/login" component={Login} />
         <Route exact={true} path="/app/find" component={() => FBFind(this.state.toilets, this.state.lat, this.state.lng)} />
         <Route exact={true} path="/app/review" component={() => FBReview(this.state.toilets, this.state.lat, this.state.lng)} />
-        <Route exact={true} path="/app/review/addtoilet" component={FBAddToilet} />
+        <Route exact={true} path="/app/review/addtoilet" component={() => FBAddToilet(this.state.lat, this.state.lng)} />
         <Route exact={true} path="/app/review/toilet/:toiletID" component={FBReviewToilet} />
       </div>
     );
