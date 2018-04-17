@@ -122,7 +122,7 @@ export default class AddToilet extends React.Component<Props, State> {
   getAddressFromLatLng = (lat: number, lng: number) => {
     // Get the address of the current location using a fetch
     const self = this;
-    const address = fetch("http://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true",
+    const address = fetch("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + lng + "&sensor=true",
       {
         method: "POST",
         credentials: "same-origin"
