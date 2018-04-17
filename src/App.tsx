@@ -101,6 +101,8 @@ class App extends React.Component<Props, State> {
         if (this.state.mounted) {
           this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
         }
+      }, (error) => {
+        alert("Geolocation failed.")
       });
     } else {
       alert("Geolocation not supported.");
