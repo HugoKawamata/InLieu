@@ -104,7 +104,7 @@ class App extends React.Component<Props, State> {
         }
       }, (error) => {
         alert("Geolocation failed.");
-        alert(error);
+        alert(error.message);
       });
     } else {
       alert("Geolocation not supported.");
