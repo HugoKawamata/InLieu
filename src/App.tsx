@@ -95,6 +95,7 @@ class App extends React.Component<Props, State> {
     this.setState({mounted: true});
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
+        alert("Got Coordinates")
         console.log("got the coords");
         console.log( pos.coords.latitude + ", " + pos.coords.longitude );
 
@@ -102,7 +103,8 @@ class App extends React.Component<Props, State> {
           this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
         }
       }, (error) => {
-        alert("Geolocation failed.")
+        alert("Geolocation failed.");
+        alert(error);
       });
     } else {
       alert("Geolocation not supported.");
