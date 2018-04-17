@@ -93,14 +93,18 @@ class App extends React.Component<Props, State> {
 
     // Get user coordinates
     this.setState({mounted: true});
-    navigator.geolocation.getCurrentPosition((pos) => {
-      console.log("got the coords");
-      console.log( pos.coords.latitude + ", " + pos.coords.longitude );
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        console.log("got the coords");
+        console.log( pos.coords.latitude + ", " + pos.coords.longitude );
 
-      if (this.state.mounted) {
-        this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
-      }
-    });
+        if (this.state.mounted) {
+          this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
+        }
+      });
+    } else {
+      alert("Geolocation not supported.");
+    }
   }
 
   componentWillUnmount() {
