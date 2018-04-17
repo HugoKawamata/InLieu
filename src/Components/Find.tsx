@@ -56,7 +56,6 @@ export default class Find extends React.Component<Props, State> {
     };
   }
 
-
   clickMarker(toiletKey: string) {
     this.setState({markerClicked: toiletKey});
   }
@@ -87,6 +86,7 @@ export default class Find extends React.Component<Props, State> {
   ));
 
   render() {
+    alert("lat: " + this.state.lat + "lng: " + this.state.lng);
     if (this.state.markerClicked !== "") {
       return <Redirect to={"/app/review/toilet/"+this.state.markerClicked} />
     }
