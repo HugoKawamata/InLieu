@@ -58,7 +58,6 @@ interface Props {}
 interface State {
   activeIcon: string;
   toilets: Object[];
-  mounted: boolean;
   lat: number;
   lng: number;
 }
@@ -69,7 +68,6 @@ class App extends React.Component<Props, State> {
     this.state = {
       activeIcon: "find",
       toilets: [],
-      mounted: false,
       lat:0,
       lng:0
     };
@@ -96,15 +94,12 @@ class App extends React.Component<Props, State> {
     });
 
     // Get user coordinates
-    this.setState({mounted: true});
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
+      navigator.geolocation.watchPosition((pos) => {
         console.log("got the coords");
         console.log( pos.coords.latitude + ", " + pos.coords.longitude );
 
-        if (this.state.mounted) {
-          this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
-        }
+        this.setState({lat: pos.coords.latitude, lng: pos.coords.longitude});
       }, (error) => {
         alert("Geolocation failed.");
       });
@@ -114,7 +109,6 @@ class App extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    this.setState({mounted: false});
     database.ref("toilets").off();
   }
 
