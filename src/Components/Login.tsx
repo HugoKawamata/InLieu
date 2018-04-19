@@ -2,7 +2,7 @@
 import * as React from "react";
 import * as firebase from "firebase";
 import { Redirect } from "react-router";
-import { Segment, Input, Button, Header } from "semantic-ui-react";
+import { Segment, Input, Button, Header, Form } from "semantic-ui-react";
 
 interface Props { }
 interface State {
@@ -67,43 +67,40 @@ export default class Login extends React.Component<Props, State> {
     } else {
       return (
         <div className="fullheight-flexbox">
-          <Segment className="loginPage" raised={true} textAlign="center" color="yellow">
+          <Segment className="loginPage" raised={true} color="purple" textAlign="center">
             <Header as="h2" textAlign="center">
               Login
             </Header>
-            <div>
-              <Input
+            <Form>
+              <Form.Input
                 value={this.state.formEmail}
-                label="Email"
+                placeholder="Email"
                 onChange={this.propertyHandler("formEmail")}
               />
-            </div>
-            <div>
-              <Input
+              <Form.Input
                 value={this.state.formPassword}
-                label="Password"
+                placeholder="Password"
                 type="password"
                 onChange={this.propertyHandler("formPassword")}
               />
-            </div>
-            <div>
-              <Button.Group>
-                <Button
-                  color="yellow"
+              <Button.Group className="centered">
+                <Form.Button
+                  //className="darkButton"
+                  color="purple"
                   loading={this.state.registerLoading}
                   onClick={() => this.register(this.state.formEmail, this.state.formPassword)}
                 >
                   Register
-                </Button>
+                </Form.Button>
                 <Button.Or/>
-                <Button
+                <Form.Button
                   loading={this.state.signInLoading}
                   onClick={() => this.signIn(this.state.formEmail, this.state.formPassword)}
                 >
                   Sign In
-                </Button>
+                </Form.Button>
               </Button.Group>
-            </div>
+            </Form>
           </Segment>
         </div>
       );

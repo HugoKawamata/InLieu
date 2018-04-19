@@ -1,6 +1,12 @@
-.input, .ui.buttons {
+.input, .ui.button {
   margin-top: 0.3rem;
-  margin-bottom: 0.7rem; }
+  margin-bottom: 0.7rem;
+  color: #292F36;
+  background-color: #eee; }
+
+.darkButton > .ui.button {
+  color: #eee;
+  background-color: #222; }
 
 body {
   background-color: #222; }
@@ -24,11 +30,12 @@ body {
 .positive .ui.button {
   background-color: #56E2D9; }
   .positive .ui.button:hover {
-    background-color: #5FFCF2; }
+    background-color: #bbf3ef; }
 
 .loginPage {
   padding: 2em !important;
-  margin: 0px 20px 20vh 20px !important; }
+  margin: 0px 20px 20vh 20px !important;
+  max-width: 550px; }
 
 .review {
   text-align: center; }
@@ -87,11 +94,15 @@ body {
   background-color: #222;
   flex-direction: column;
   color: #eee;
-  padding-bottom: 50%; }
+  padding-bottom: 10em; }
   .landing-container h4 {
     margin-top: 0; }
   .landing-container .landing-logo {
     width: 100px;
     padding-bottom: 50px; }
+
+.centered {
+  text-align: center;
+  margin: auto; }
 
 /*# sourceMappingURL=style.css.map */

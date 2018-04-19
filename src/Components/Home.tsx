@@ -19,7 +19,7 @@ class Home extends React.Component<HomeProps, State> {
         <h4>Find the perfect toilet near you.</h4>
         <img src="InLieuLogoWhite.png" className="landing-logo" />
         <Link to="/login">
-          <Button className="button">Login</Button>
+          <Button className="button" size="huge">Get Started</Button>
         </Link>
       </div>
     );
