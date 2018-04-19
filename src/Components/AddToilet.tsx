@@ -487,6 +487,7 @@ export default class AddToilet extends React.Component<Props, State> {
           />
 
           <Form.Button
+            className="darkButton"
             onClick={this.submitToilet}
           >
             Submit

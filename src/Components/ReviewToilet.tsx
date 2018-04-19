@@ -170,7 +170,7 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
             />
           </Form.Group>
             {this.state.reviewMode ? (
-                <Form.Button className="positive inline-button" onClick={this.submitReview}>
+                <Form.Button className="darkButton inline-button" onClick={this.submitReview}>
                   Submit
                 </Form.Button>
               ) : (
