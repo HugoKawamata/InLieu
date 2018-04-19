@@ -149,7 +149,11 @@ export default class AddToilet extends React.Component<Props, State> {
   // Gets the latlng from th user's geolocation and calls getAddressFromLatLng using the retrieved coords
   getLatLngFromLocation = () => {
     // Get the current location
-    this.getAddressFromLatLng(this.props.lat, this.props.lng);
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      this.getAddressFromLatLng(lat, lng);
+    });
   }
 
   formIsValid = () => {

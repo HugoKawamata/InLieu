@@ -92,10 +92,13 @@ class App extends React.Component<Props, State> {
       }
       this.setState({toilets: newToilets});
     });
+    this.findAndSetLocation();
+  }
 
+  findAndSetLocation() {
     // Get user coordinates
     if (navigator.geolocation) {
-      navigator.geolocation.watchPosition((pos) => {
+      navigator.geolocation.getCurrentPosition((pos) => {
         console.log("got the coords");
         console.log( pos.coords.latitude + ", " + pos.coords.longitude );
 
