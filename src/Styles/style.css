@@ -1,6 +1,8 @@
-.input, .ui.button {
+.input, .ui.buttons {
   margin-top: 0.3rem;
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.7rem; }
+
+.ui.button {
   color: #292F36;
   background-color: #eee; }
 

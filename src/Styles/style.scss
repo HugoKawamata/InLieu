@@ -13,12 +13,15 @@ $light1: #E0D3DE;
 $light2: #D8D0C1;
 $dark: #292F36;
 
-.input, .ui.button {
+.input, .ui.buttons {
   margin-top: $usual-top-pad;
   margin-bottom: $usual-bottom-pad;
+
+}
+
+.ui.button {
   color: $dark;
   background-color: #eee;
-
 }
 
 .darkButton>.ui.button {

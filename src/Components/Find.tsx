@@ -65,7 +65,7 @@ export default class Find extends React.Component<Props, State> {
       googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry," +
       "drawing,places&key=AIzaSyDaSKRHqKVoX30QjzSHFRYupe92K_NpJpk",
       loadingElement: <div style={{ height: `100%` }} />,
-      containerElement: <div style={{ height: `80vh` }} />,
+      containerElement: <div style={{ height: '80vh' }} />,
       mapElement: <div style={{ height: `100%` }} />,
     }),
     withScriptjs,
