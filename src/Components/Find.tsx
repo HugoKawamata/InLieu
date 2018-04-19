@@ -65,7 +65,7 @@ export default class Find extends React.Component<Props, State> {
       googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry," +
       "drawing,places&key=AIzaSyDaSKRHqKVoX30QjzSHFRYupe92K_NpJpk",
       loadingElement: <div style={{ height: `100%` }} />,
-      containerElement: <div style={{ height: `90vh` }} />,
+      containerElement: <div style={{ height: `80vh` }} />,
       mapElement: <div style={{ height: `100%` }} />,
     }),
     withScriptjs,
@@ -74,7 +74,6 @@ export default class Find extends React.Component<Props, State> {
     <GoogleMap
       defaultZoom={15} // Or 16. The larger the number, the more zoomed in
       defaultCenter={{ lat: this.props.lat, lng: this.props.lng }}
-      center={{ lat: this.props.lat, lng: this.props.lng }}
     >
       {this.state.markers}
       {/* User position. It's not rendering the correct icon atm, so this feature is on hold for a sec
@@ -89,6 +88,10 @@ export default class Find extends React.Component<Props, State> {
     if (this.state.markerClicked !== "") {
       return <Redirect to={"/app/review/toilet/"+this.state.markerClicked} />
     }
+    console.log("this.props.lat == " + this.props.lat);
+    console.log("this.props.lng == " + this.props.lng);
+    console.log("this.state.markers == " + this.state.markers);
+    console.log("this.state.markers.length == " + this.state.markers.length);
     return (
       <Segment attached="bottom" className="find">
         <div className="map">
