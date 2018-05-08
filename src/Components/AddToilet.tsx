@@ -91,7 +91,6 @@ export default class AddToilet extends React.Component<Props, State> {
       numberOfReviews: 1
     };
     this.props.fdb.ref("toilets").push().set(data);
-    this.setState({submitted: true});
   }
 
   // Gets latlng from a given address and pushes the current state as a new toilet
@@ -147,14 +146,17 @@ export default class AddToilet extends React.Component<Props, State> {
   }
 
   // Gets the latlng from th user's geolocation and calls getAddressFromLatLng using the retrieved coords
-  getLatLngFromLocation = () => {
+  getLatLngFromLocation() {
     // Get the current location
+    console.log("New toilet comin' up");
     navigator.geolocation.getCurrentPosition((pos) => {
       const lat = pos.coords.latitude;
       const lng = pos.coords.longitude;
+      console.log("New toilet:" + lat + ", " + lng);
       this.getAddressFromLatLng(lat, lng);
-    });
+    }, (error) => {console.log(error)}, {maximumAge: 180000});
   }
+  
 
   formIsValid = () => {
     return !(
@@ -185,10 +187,11 @@ export default class AddToilet extends React.Component<Props, State> {
     this.setState({loading: true});
 
     if (this.state.useGeolocation === 1) {
-      this.getLatLngFromLocation();
+      await this.getLatLngFromLocation();
     } else if (this.state.useGeolocation === 0) {
-      this.getLatLngFromAddress(this.state.address);
+      await this.getLatLngFromAddress(this.state.address);
     }
+    this.setState({submitted: true});
   }
 
   handleChange = (e: React.FormEvent<HTMLInputElement>, { name, value }: any) => {
