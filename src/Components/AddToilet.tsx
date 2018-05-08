@@ -342,7 +342,7 @@ export default class AddToilet extends React.Component<Props, State> {
     
     if (this.state.submitted) {
       return (
-        <Redirect to="/app/review" />
+        <Redirect to="/app/review/added" />
       );
     }
 

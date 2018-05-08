@@ -34,9 +34,24 @@ const FBReview = (toilets: Object[], lat: number, lng: number) => {
       toilets={toilets}
       lat={lat}
       lng={lng}
+      msgHead=""
+      msgBody=""
     />
   );
 };
+
+const FBReviewMessage = (toilets: Object[], lat: number, lng: number, msgHead: string, msgBody: string) => {
+  return (
+    <Review
+      fdb={database}
+      toilets={toilets}
+      lat={lat}
+      lng={lng}
+      msgHead={msgHead}
+      msgBody={msgBody}
+    />
+  )
+}
 
 const FBAddToilet = (lat: number, lng: number) => {
   return (
@@ -123,6 +138,10 @@ class App extends React.Component<Props, State> {
         <Route exact={true} path="/login" component={Login} />
         <Route exact={true} path="/app/find" component={() => FBFind(this.state.toilets, this.state.lat, this.state.lng)} />
         <Route exact={true} path="/app/review" component={() => FBReview(this.state.toilets, this.state.lat, this.state.lng)} />
+        <Route exact={true} path="/app/review/added" component={() => FBReviewMessage(
+          this.state.toilets, this.state.lat, this.state.lng, "Added new toilet!", "It will appear on the map once it is approved.")} />
+        <Route exact={true} path="/app/review/reviewed" component={() => FBReviewMessage(
+          this.state.toilets, this.state.lat, this.state.lng, "Toilet reviewed!", "")} />
         <Route exact={true} path="/app/review/addtoilet" component={() => FBAddToilet(this.state.lat, this.state.lng)} />
         <Route exact={true} path="/app/review/toilet/:toiletID" component={FBReviewToilet} />
       </div>

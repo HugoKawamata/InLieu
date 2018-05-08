@@ -92,7 +92,7 @@ export default class ReviewToilet extends React.PureComponent<Props, State> {
 
   render() {
     if (this.state.submitted) {
-      return <Redirect to="/app/review" />
+      return <Redirect to="/app/review/reviewed" />
     }    
 
     const aestheticRating = Object.keys(this.state.toilet).length === 0 ? 0 : this.state.toilet["criteria"]["aesthetic"]["rating"];

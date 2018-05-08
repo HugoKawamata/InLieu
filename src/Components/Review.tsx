@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as firebase from "firebase";
-import { Segment, Input, Button, Icon, Rating, Loader } from "semantic-ui-react";
+import { Segment, Input, Button, Icon, Rating, Loader, Message } from "semantic-ui-react";
 import StandaloneSearchBox from "react-google-maps/lib/components/places/StandaloneSearchBox";
 
 interface Props {
@@ -10,6 +10,8 @@ interface Props {
   toilets: Object[];
   lat: number;
   lng: number;
+  msgHead: string;
+  msgBody: string;
 }
 
 interface State {
@@ -79,7 +81,6 @@ export default class Review extends React.Component<Props, State> {
   }
 
   render() {
-    console.log("render review")
     let nearbyToilets = [];
     let userCoords = [this.props.lat, this.props.lng];
     for (let i = 0; i < this.props.toilets.length; i++) {
@@ -109,10 +110,22 @@ export default class Review extends React.Component<Props, State> {
       />
     ));
 
-    console.log(this.props.lat + ", " + this.props.lng);
+    const messageBody = this.props.msgBody !== "" ? (
+      <p>{this.props.msgBody}</p>
+    ) : ""
+
+    const message = this.props.msgHead !== "" ? (
+      <Message positive={true}>
+        <Message.Header>
+          {this.props.msgHead}
+        </Message.Header>
+        {messageBody}
+      </Message>
+    ) : ""
 
     return (
       <Segment attached="bottom" className="review">
+        {message}
         {(this.props.lat !== 0 && this.props.lng !== 0) ? 
           <div>
             {toiletButtons}
@@ -124,7 +137,8 @@ export default class Review extends React.Component<Props, State> {
               </Link>
             ) : ""}
           </div> :
-        <LoadingToilets />}
+          <LoadingToilets />
+        }
       </Segment>
     );
   }
