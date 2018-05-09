@@ -2,8 +2,12 @@
 import * as React from "react";
 import * as firebase from "firebase";
 import { Redirect } from "react-router";
-import { Segment, Input, Button, Header, Form } from "semantic-ui-react";
+import { Segment, Input, Button, Header, Form, Message } from "semantic-ui-react";
 
+interface Error {
+  code: string;
+  message: string;
+}
 interface Props { }
 interface State {
   formEmail: string;
@@ -11,6 +15,7 @@ interface State {
   signInLoading: boolean;
   registerLoading: boolean;
   validLogin: boolean;
+  error: Error;
 }
 
 export default class Login extends React.Component<Props, State> {
@@ -22,6 +27,7 @@ export default class Login extends React.Component<Props, State> {
       signInLoading: false,
       registerLoading: false,
       validLogin: false,
+      error: {code: "", message: ""}
     };
   }
 
@@ -33,7 +39,7 @@ export default class Login extends React.Component<Props, State> {
       }
     ).catch(
       (error: any) => {
-        alert(error);
+        this.setState({error: error});
       }
     );
     this.setState({registerLoading: false});
@@ -47,7 +53,7 @@ export default class Login extends React.Component<Props, State> {
       }
     ).catch(
       (error: any) => {
-        // Handle error
+        this.setState({error: error});
       }
     );
     this.setState({signInLoading: false});
@@ -59,7 +65,23 @@ export default class Login extends React.Component<Props, State> {
     this.setState(obj);
   }
 
+  errorMessages = {
+    "auth/invalid-email": "Please ensure your email address is correct.",
+    "auth/user-not-found": "That account does not exist. Click register to create the account.",
+    "auth/wrong-password": "Email address or password is incorrect."
+  }
+
   render() {
+    const errorMessage = this.errorMessages[this.state.error.code];
+    const errorComponent = this.state.error.code !== "" ? 
+      (<Message error={true}>
+        <p>{ // If I have a custom message, show that. Else, show the firebase error.
+          errorMessage !== undefined ?
+          errorMessage :
+          this.state.error.message
+        }</p>
+      </Message>) : ""
+
     if (this.state.validLogin) {
       return (
         <Redirect to="/app/find" />
@@ -68,6 +90,7 @@ export default class Login extends React.Component<Props, State> {
       return (
         <div className="fullheight-flexbox">
           <Segment className="loginPage" raised={true} color="purple" textAlign="center">
+            {errorComponent}
             <Header as="h2" textAlign="center">
               Login
             </Header>

@@ -23,6 +23,8 @@ body {
   margin-top: 5px !important; }
   .mobnavbar .item {
     height: 102%; }
+    .mobnavbar .item.active {
+      border-top: 2px solid #a333c8 !important; }
     .mobnavbar .item:not(.active) {
       color: #bbb !important; }
 

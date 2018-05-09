@@ -13,6 +13,8 @@ $light1: #E0D3DE;
 $light2: #D8D0C1;
 $dark: #292F36;
 
+$purple: #a333c8;
+
 .input, .ui.buttons {
   margin-top: $usual-top-pad;
   margin-bottom: $usual-bottom-pad;
@@ -45,9 +47,15 @@ body {
 
   .item {
     height: 102%;
+    &.active {
+      border-top: 2px solid $purple !important;
+    }
 
     &:not(.active) {
       color: #bbb !important;
+      &:hover {
+        //border-top: 2px solid $purple;
+      }
     }
   }
 }
