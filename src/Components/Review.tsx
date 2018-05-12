@@ -12,6 +12,14 @@ interface Props {
   lng: number;
   msgHead: string;
   msgBody: string;
+  userInfo: UserInfo;
+}
+
+interface UserInfo {
+  showMale: boolean;
+  showFemale: boolean;
+  showUnisex: boolean;
+  privilege: string;
 }
 
 interface State {
@@ -98,17 +106,27 @@ export default class Review extends React.Component<Props, State> {
     // Sort nearbyToilets by proximity
     nearbyToilets.sort(this.compare)
 
-    const toiletButtons = nearbyToilets.map((toilet) => (
-      <ToiletButton
-        key={toilet["key"]}
-        address={toilet["data"].address} 
-        sex={toilet["data"].sex}
-        id={toilet["key"]}
-        aesthetic={toilet["data"]["criteria"]["aesthetic"]["rating"]}
-        cleanliness={toilet["data"]["criteria"]["cleanliness"]["rating"]}
-        quietness={toilet["data"]["criteria"]["quietness"]["rating"]}
-      />
-    ));
+    const toiletButtons = nearbyToilets.map((toilet) => {
+      if (
+        (toilet["data"].sex === "m" && this.props.userInfo.showMale) ||
+        (toilet["data"].sex === "f" && this.props.userInfo.showFemale) ||
+        (toilet["data"].sex === "u" && this.props.userInfo.showUnisex)
+      ) { // Show it
+        return (
+          <ToiletButton
+            key={toilet["key"]}
+            address={toilet["data"].address} 
+            sex={toilet["data"].sex}
+            id={toilet["key"]}
+            aesthetic={toilet["data"]["criteria"]["aesthetic"]["rating"]}
+            cleanliness={toilet["data"]["criteria"]["cleanliness"]["rating"]}
+            quietness={toilet["data"]["criteria"]["quietness"]["rating"]}
+          />
+        );
+      } else {
+        return "";
+      }
+    });
 
     const messageBody = this.props.msgBody !== "" ? (
       <p>{this.props.msgBody}</p>

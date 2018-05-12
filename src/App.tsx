@@ -17,6 +17,10 @@ const FBHome = () => {
   return <Home fdb={database} />;
 };
 
+const FBLogin = () => {
+  return <Login fdb={database} />;
+}
+
 const FBFind = (toilets: Object[], lat: number, lng: number) => {
   return (
     <Find 
@@ -27,11 +31,12 @@ const FBFind = (toilets: Object[], lat: number, lng: number) => {
     />);
 };
 
-const FBReview = (toilets: Object[], lat: number, lng: number) => {
+const FBReview = (toilets: Object[], lat: number, lng: number, user: UserInfo) => {
   return (
     <Review
       fdb={database}
       toilets={toilets}
+      userInfo={user}
       lat={lat}
       lng={lng}
       msgHead=""
@@ -40,11 +45,12 @@ const FBReview = (toilets: Object[], lat: number, lng: number) => {
   );
 };
 
-const FBReviewMessage = (toilets: Object[], lat: number, lng: number, msgHead: string, msgBody: string) => {
+const FBReviewMessage = (toilets: Object[], lat: number, lng: number, msgHead: string, msgBody: string, user: UserInfo) => {
   return (
     <Review
       fdb={database}
       toilets={toilets}
+      userInfo={user}
       lat={lat}
       lng={lng}
       msgHead={msgHead}
@@ -75,6 +81,14 @@ interface State {
   toilets: Object[];
   lat: number;
   lng: number;
+  user?: firebase.User;
+  userInfo: UserInfo;
+}
+interface UserInfo {
+  showMale: boolean;
+  showFemale: boolean;
+  showUnisex: boolean;
+  privilege: string;
 }
 
 class App extends React.Component<Props, State> {
@@ -83,8 +97,15 @@ class App extends React.Component<Props, State> {
     this.state = {
       activeIcon: "find",
       toilets: [],
-      lat:0,
-      lng:0
+      lat:-27.5016713,
+      lng:153.0077424,
+      user:undefined,
+      userInfo: {
+        showMale: true,
+        showFemale: true,
+        showUnisex: true,
+        privilege: "basic"
+      }
     };
   }
 
@@ -107,6 +128,20 @@ class App extends React.Component<Props, State> {
       }
       this.setState({toilets: newToilets});
     });
+    firebase.auth().onAuthStateChanged((user: firebase.User) => {
+      this.setState({user: user})
+      database.ref("users").child(user.uid).once('value', (userRef) => {
+        if (userRef) {
+          let thisUser:UserInfo = userRef.val();
+          this.setState({userInfo: {
+            showMale: thisUser.showMale,
+            showFemale: thisUser.showFemale,
+            showUnisex: thisUser.showUnisex,
+            privilege: thisUser.privilege
+          }})
+        }
+      })
+    })
     this.findAndSetLocation();
   }
 
@@ -135,13 +170,13 @@ class App extends React.Component<Props, State> {
       <div id="main">
         <Route path="/app" component={MobNavBar} />
         <Route exact={true} path="/" component={FBHome} />
-        <Route exact={true} path="/login" component={Login} />
+        <Route exact={true} path="/login" component={FBLogin} />
         <Route exact={true} path="/app/find" component={() => FBFind(this.state.toilets, this.state.lat, this.state.lng)} />
-        <Route exact={true} path="/app/review" component={() => FBReview(this.state.toilets, this.state.lat, this.state.lng)} />
+        <Route exact={true} path="/app/review" component={() => FBReview(this.state.toilets, this.state.lat, this.state.lng, this.state.userInfo)} />
         <Route exact={true} path="/app/review/added" component={() => FBReviewMessage(
-          this.state.toilets, this.state.lat, this.state.lng, "Added new toilet!", "It will appear on the map once it is approved.")} />
+          this.state.toilets, this.state.lat, this.state.lng, "Added new toilet!", "It will appear on the map once it is approved.", this.state.userInfo)} />
         <Route exact={true} path="/app/review/reviewed" component={() => FBReviewMessage(
-          this.state.toilets, this.state.lat, this.state.lng, "Toilet reviewed!", "")} />
+          this.state.toilets, this.state.lat, this.state.lng, "Toilet reviewed!", "", this.state.userInfo)} />
         <Route exact={true} path="/app/review/addtoilet" component={() => FBAddToilet(this.state.lat, this.state.lng)} />
         <Route exact={true} path="/app/review/toilet/:toiletID" component={FBReviewToilet} />
       </div>

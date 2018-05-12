@@ -8,7 +8,9 @@ interface Error {
   code: string;
   message: string;
 }
-interface Props { }
+interface Props { 
+  fdb: firebase.database.Database;
+}
 interface State {
   formEmail: string;
   formPassword: string;
@@ -35,6 +37,15 @@ export default class Login extends React.Component<Props, State> {
     this.setState({registerLoading: true});
     firebase.auth().createUserWithEmailAndPassword(email, password).then(
       () => {
+        let user = firebase.auth().currentUser;
+        if (user !== null) {
+          this.props.fdb.ref("users").child(user["uid"]).set({
+            showMale: true,
+            showFemale: true,
+            showUnisex: true,
+            privilege: "basic" // Names for different privileges? Porcelain?
+          });
+        }
         this.setState({validLogin: true});
       }
     ).catch(
